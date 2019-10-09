@@ -1,0 +1,11 @@
+body {
+  color: wheat;
+  background-color: #400101;
+  font-family: "Roboto";
+  font-weight: 700;
+  font-size: 1.2em;
+}
+
+.colorHref {
+  color: #a65221;
+}
