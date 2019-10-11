@@ -36,12 +36,10 @@ class MovieList extends React.Component {
             vote_average: voteAvarage,
             overview,
             id
-          },
-          i
+          }
         ) => {
           return (
             <MovieCard
-              place={i + 1}
               src={posterPath}
               title={title}
               release={releaseDate}

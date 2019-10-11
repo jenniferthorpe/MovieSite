@@ -1,13 +1,14 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Link } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import './style/style.css';
 import { createMuiTheme } from '@material-ui/core/styles';
 
 import { ThemeProvider } from '@material-ui/styles';
-import Menu from './components/Menu';
+import NavigationMenu from './components/NavigationMenu';
 import MovieSpecifications from './components/MovieSpecifications';
 import MovieList from './components/MovieList';
+import Search from './components/Search';
 
 const theme = createMuiTheme({
   palette: {
@@ -29,10 +30,15 @@ const theme = createMuiTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
+
       <div className="App">
-        <Menu />
+
+        <NavigationMenu />
+
         <Container maxWidth="lg">
+
           <Switch>
+
             <Route exact path="/">
               <h1
                 style={{
@@ -43,13 +49,18 @@ function App() {
               >
                 Tending movies this week
                   </h1>
-
               <MovieList />
             </Route>
 
             <Route exact path="/movies/:id">
               <MovieSpecifications />
             </Route>
+
+            <Route exact path="/search/:query">
+              <Link to="/">Back to start</Link>
+              <Search />
+            </Route>
+
           </Switch>
         </Container>
       </div>

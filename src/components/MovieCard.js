@@ -13,6 +13,7 @@ const allStyle = {
 
 const imgBox = {
   width: '200px',
+  minHeight: '300px',
   display: 'inline-block'
 };
 

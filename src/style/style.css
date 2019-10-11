@@ -9,3 +9,26 @@ body {
 .colorHref {
   color: #a65221;
 }
+
+
+form,  .SearchAppBar-search-11{
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+}
+
+.SearchAppBar-title-10 {
+  width: 200px;
+}
+
+.SearchAppBar-search-11 {
+  width: 100%;
+    justify-content: flex-end;
+}
+
+.MuiInputBase-root {
+
+  background-color: rgba(217, 154, 78, .2);
+  color: wheat !important;
+  padding-left: 10px;
+}
