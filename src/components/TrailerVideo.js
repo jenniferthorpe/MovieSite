@@ -10,7 +10,7 @@ class TrailerVideo extends Component {
   constructor() {
     super();
     this.state = {
-      videoKey: null
+      results: []
     };
   }
 
@@ -18,7 +18,7 @@ class TrailerVideo extends Component {
     const { id: movieID } = this.props;
 
     const {
-      results: [{ key: videoKey }]
+      results
     } = await fetch(
       `https://api.themoviedb.org/3/movie/${
       movieID
@@ -26,19 +26,21 @@ class TrailerVideo extends Component {
     ).then(response => response.json());
 
     this.setState({
-      videoKey
+      results
     });
   }
 
   render() {
-    const { videoKey } = this.state;
-    if (videoKey) {
+    const { results } = this.state;
+
+    if (results.length > 0) {
+      const [{ key: videoKey }] = results;
 
       return (
         <ReactPlayer
           url={`https://www.youtube.com/embed/${videoKey}`}
-          width="800px"
-          height="450px"
+          width="1504px"
+          height="794px"
         />
       );
     }

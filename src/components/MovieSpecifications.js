@@ -11,11 +11,12 @@ import SimilarMovies from './SimilarMovies';
 import '../style/style.css';
 
 const imgBox = {
-  width: '100%',
-  maxHeight: '400px',
+  width: '80%',
+  maxHeight: '500px',
   overflow: 'hidden',
   borderRadius: '5px',
-  boxShadow: '0px 0px 24px -4px rgba(0,0,0,0.36)'
+  boxShadow: '0px 0px 24px -4px rgba(0,0,0,0.36)',
+  margin: '0% 10%'
 };
 
 const img = {
@@ -46,11 +47,14 @@ class MovieSpecifications extends React.Component {
   constructor() {
     super();
     this.state = {
-      movieDetails: null
+      movieDetails: null,
     };
+    this.similarMoviesTitleRef = React.createRef();
   }
 
+
   async componentDidMount() {
+
     const {
       match: {
         params: { id: movieID }
@@ -68,9 +72,9 @@ class MovieSpecifications extends React.Component {
     });
   }
 
+
   render() {
     const { state } = this;
-
     if (state.movieDetails) {
       const {
         movieDetails: {
@@ -85,8 +89,7 @@ class MovieSpecifications extends React.Component {
         }
       } = this.state;
 
-      const genresList = genres.map(({ id, name }) => <div key={id}>{name}</div>
-      );
+      const genresList = genres.map(({ id, name }) => <div key={id}>{name}</div>);
 
       const runtimeHour = Math.floor(runtime / 60);
       const runtimeMin = runtime % 60;
@@ -109,12 +112,12 @@ class MovieSpecifications extends React.Component {
                 to="/"
                 href="/"
                 className={classes.link}
-                style={{ color: '#A65221' }}
+                style={{ color: '#A65221', marginLeft: '10%' }}
               >
                 Back to list
               </Link>
             </Typography>
-            <h1 style={{ color: '#D99A4E', paddingBottom: '50px' }}>{title}</h1>
+            <h1 style={{ color: '#D99A4E', paddingBottom: '50px', marginLeft: '10%', fontSize: '52px' }}>{title}</h1>
           </Grid>
 
           <Grid item xs={3} />
@@ -175,33 +178,39 @@ class MovieSpecifications extends React.Component {
 
           <Grid item xs={3} />
 
-          <Grid item xs={2} />
 
-          <Grid item xs={8} style={{ margin: '50px 0px' }}>
+          <Grid item xs={12} style={{ padding: '100px 10%' }}>
             <TrailerVideo id={movieID} />
           </Grid>
 
-          <Grid item xs={2} />
 
           <Grid item xs={12}>
-            <h2 style={{ padding: '0px 0px 10px 10px', color: '#D99A4E' }}>
-              Reviews
-            </h2>
-            <Reviews id={movieID} />
+            <div style={{ margin: '0px 200px' }}>
+              <h1 style={{ padding: '0px 0px 0px 40px', color: '#D99A4E' }}>
+                Reviews
+            </h1>
+              <Reviews id={movieID} />
+            </div>
           </Grid>
 
-          <Grid item xs={12}>
-            <h2
-              style={{
-                paddingBottom: '10px',
-                width: '100%',
-                color: '#D99A4E'
-              }}
-            >
-              Similar Movies
-            </h2>
-            <SimilarMovies id={movieID} />
-          </Grid>
+
+          <h1
+            style={{
+              padding: '100px 0px 50px',
+              textAlign: 'center',
+              width: '100%',
+              color: '#D99A4E'
+            }}
+            ref={this.similarMoviesTitleRef}
+          >
+            Similar Movies
+            </h1>
+          <div style={{ position: 'relative', textAlign: 'center' }}>
+
+
+            {this.similarMoviesTitleRef ? <SimilarMovies id={movieID} similarMoviesTitle={this.similarMoviesTitleRef} /> : ''}
+          </div>
+
         </Grid>
       );
     }

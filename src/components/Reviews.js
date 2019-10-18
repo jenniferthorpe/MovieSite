@@ -33,9 +33,9 @@ class Reviews extends Component {
     if (reviews.length > 0) {
 
       return reviews.map(({ author, content, id: reviewID }) => (
-        <div key={reviewID}>
-          <div style={{ padding: '0px 10px' }}>
-            <h4 className="colorHref">{author}</h4>
+        <div key={reviewID} className='reviewBlock'>
+          <div style={{ padding: '10px 40px 30px' }}>
+            <h4 style={{ color: '#D7994D' }}>{author}</h4>
             <ShowMoreText
               lines={5}
               more="Show more"
@@ -47,8 +47,8 @@ class Reviews extends Component {
               {content}
             </ShowMoreText>
           </div>
-          <hr style={{ marginTop: '30px', border: '1px solid #730202' }} />
-        </div>
+          {/* <hr style={{ marginTop: '30px', border: '.5px solid wheat' }} /> */}
+        </div >
       )
       );
     }

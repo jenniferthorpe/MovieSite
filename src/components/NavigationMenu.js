@@ -7,10 +7,11 @@ import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types'
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import { Link, Redirect } from 'react-router-dom'
-import '../style/style.css'
+import { withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
+import '../style/style.css';
+import Drawer from './Drawer';
 
 
 
@@ -80,6 +81,12 @@ class SearchAppBar extends React.Component {
       searchIcon: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
     }).isRequired,
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired,
+    }).isRequired,
+    appRef: PropTypes.shape({
+      current: PropTypes.any
+    }).isRequired
   };
 
 
@@ -87,13 +94,18 @@ class SearchAppBar extends React.Component {
     super();
     this.state = {
       searchValue: '',
-      search: '',
+      showMenu: true,
+      scrollPosition: 0,
     };
-
-
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleMenu = this.toggleMenu.bind(this);
+    this.scrollToTop = this.scrollToTop.bind(this);
 
+  }
+
+  componentDidMount() {
+    window.addEventListener('scroll', this.toggleMenu);
   }
 
   handleChange(event) {
@@ -102,55 +114,60 @@ class SearchAppBar extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const { searchValue, search } = this.state;
-
-    const removedSpace = searchValue.replace(' ', '+');
-    console.log(removedSpace);
+    const { searchValue } = this.state;
 
     this.setState({
-      search: removedSpace
+      searchValue
+    }, () => {
+      const { history } = this.props;
+      history.push(`/search/${searchValue}`);
     })
+  }
 
+  toggleMenu() {
+    const newPosition = window.scrollY;
+    const { scrollPosition } = this.state;
 
-    console.log(`${searchValue}=serachValue`);
-    console.log(`${search}=search`);
+    if (scrollPosition > newPosition) {
+      this.setState({ showMenu: true, scrollPosition: newPosition });
+    }
+    else {
+      this.setState({ showMenu: false, scrollPosition: newPosition })
+    }
+  }
 
+  scrollToTop() {
 
-
+    const { appRef } = this.props;
+    appRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
 
   render() {
 
-    const { searchValue, search } = this.state;
-
-    if (search) {
-      return <Redirect to={`/search/${search}`} query={searchValue} />
-    }
-
-
-
-
-
+    const { searchValue } = this.state;
     const { classes } = this.props;
-
-
+    const { showMenu } = this.state;
 
     return (
       <div className={classes.root}>
-        <AppBar position="static">
-          <Toolbar>
-            <form onSubmit={this.handleSubmit}>
+        <AppBar position="fixed"
+          style={showMenu ? { height: '64px', transition: 'height .4s' } : { height: '0px', transition: 'height .4s' }}
+
+        >
+          < Toolbar >
+            <form onSubmit={this.handleSubmit}
+              style={showMenu ? { marginTop: '0px', transition: 'margin-top .4s' } : { marginTop: '-100px', transition: 'margin-top .4s' }}>
               <IconButton
                 edge="start"
                 className={classes.menuButton}
                 color="inherit"
                 aria-label="open drawer"
               >
-                <MenuIcon />
+                <Drawer />
               </IconButton>
               <Typography className={classes.title} variant="h6" noWrap>
-                <Link to='/' style={{ textDecoration: 'none', color: 'wheat' }}>
+                <Link to='/' onClick={this.scrollToTop} style={{ textDecoration: 'none', color: 'wheat' }}>
                   MovieTajm
             </Link>
               </Typography>
@@ -170,15 +187,14 @@ class SearchAppBar extends React.Component {
                   value={searchValue}
                   type="text"
                 />
-
               </div>
             </form>
           </Toolbar>
         </AppBar>
-      </div>
+      </div >
     );
   }
 }
 
-export default withStyles(useStyles)(SearchAppBar)
+export default withStyles(useStyles)(withRouter(SearchAppBar))
 

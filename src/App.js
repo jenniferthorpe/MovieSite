@@ -27,45 +27,53 @@ const theme = createMuiTheme({
   }
 });
 
-function App() {
-  return (
-    <ThemeProvider theme={theme}>
+class App extends React.Component {
+  constructor() {
+    super()
+    this.appRef = React.createRef();
+  }
 
-      <div className="App">
+  render() {
 
-        <NavigationMenu />
+    return (
+      <ThemeProvider theme={theme}>
 
-        <Container maxWidth="lg">
+        <div className="App" ref={this.appRef}>
 
-          <Switch>
+          <NavigationMenu appRef={this.appRef} />
 
-            <Route exact path="/">
-              <h1
-                style={{
-                  textAlign: 'center',
-                  paddingTop: '30px',
-                  color: '#D99A4E'
-                }}
-              >
-                Tending movies this week
+          <Container maxWidth="xl" style={{ paddingTop: '64px' }}>
+
+            <Switch>
+
+              <Route exact path="/">
+                <h1
+                  style={{
+                    textAlign: 'center',
+                    paddingTop: '30px',
+                    color: '#D99A4E'
+                  }}
+                >
+                  Trending movies this week
                   </h1>
-              <MovieList />
-            </Route>
+                {this.appRef ? <MovieList appRef={this.appRef} /> : ''}
+              </Route>
 
-            <Route exact path="/movies/:id">
-              <MovieSpecifications />
-            </Route>
+              <Route exact path="/movies/:id">
+                <MovieSpecifications />
+              </Route>
 
-            <Route exact path="/search/:query">
-              <Link to="/">Back to start</Link>
-              <Search />
-            </Route>
+              <Route exact path="/search/:query">
+                <Link to="/" className="backBtnSearch">Back to start</Link>
+                <Search />
+              </Route>
 
-          </Switch>
-        </Container>
-      </div>
-    </ThemeProvider>
-  );
+            </Switch>
+          </Container>
+        </div>
+      </ThemeProvider>
+    );
+  }
 }
 
 export default App;

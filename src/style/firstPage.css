@@ -1,0 +1,11 @@
+.container{
+
+    
+    display: grid;
+
+    grid-template-areas: "img h1 h1 h1"
+                         "img  main main main"
+                        "img  main main main";
+                        grid-template-rows: auto 1fr 30px;
+                        grid-template-columns: auto 1fr;
+}
