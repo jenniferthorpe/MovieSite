@@ -1,11 +1,41 @@
-.container{
+.container {
+  display: grid;
 
-    
-    display: grid;
+  grid-template-areas:
+    "img h1 h1 h1 h1"
+    "img releaseInfo releaseInfo rating rating"
+    "img overview overview overview overview"
+    "img lang lang lang .";
+  grid-template-rows: 100px 50px auto 50px;
+  grid-template-columns: 200px 1fr 1fr 1fr 1fr;
+  grid-column-gap: 20px;
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 70px;
+}
 
-    grid-template-areas: "img h1 h1 h1"
-                         "img  main main main"
-                        "img  main main main";
-                        grid-template-rows: auto 1fr 30px;
-                        grid-template-columns: auto 1fr;
+.gridImage {
+  grid-area: img;
+}
+
+.title {
+  grid-area: h1;
+}
+
+.releaseInfo {
+  grid-area: releaseInfo;
+}
+
+.rating {
+  grid-area: rating;
+  margin-top: -13px;
+}
+
+.overview {
+  grid-area: overview;
+  /* padding: 0px 100px 0px 0px; */
+}
+
+.language {
+  grid-area: lang;
 }

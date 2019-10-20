@@ -39,7 +39,7 @@ const overviewBlock = {
 };
 
 const link = {
-  // textDecoration: 'none'
+  textDecoration: 'none'
 };
 
 const icons = {
@@ -85,7 +85,7 @@ function MovieCard(props) {
 
   return (
     <div className='container'>
-      <Link to={{ pathname: `/movies/${movieID}` }}>
+      <Link to={{ pathname: `/movies/${movieID}` }} className='gridImage'>
         <div style={imgBox}>
           <img
             src={`https://image.tmdb.org/t/p/w200${src}`}
@@ -96,22 +96,23 @@ function MovieCard(props) {
       </Link>
 
 
-      <Link to={{ pathname: `/movies/${movieID}` }} style={link}>
+      <Link to={{ pathname: `/movies/${movieID}` }} style={link} className='title'>
         <h1 style={{ color: '#D99A4E', fontSize: '1.6em' }}>{title}</h1>
       </Link>
-      <main style={{ fontSize: '15px', paddingLeft: '2px' }}>
+      <div className='releaseInfo'>
         Release Date: {release}
-
-
-        {/* Avarage rating: <span style={{ fontSize: '32px' }}>{voteAvg}</span>{' '}
-
-        {overview} */}
-      </main>
-      <div style={{ marginTop: '20px', fontSize: '15px' }}>
+      </div>
+      <div className='rating'>
+        Avarage rating: <span style={{ fontSize: '32px' }}>{voteAvg}</span>{' '}
+      </div>
+      <div className='overview'>
+        {overview}
+      </div>
+      <div className='language'>
         Language: {langFullText}
       </div>
-      <StarsIcon fontSize='large' style={{ paddingRight: '50px' }} />
-      <WatchLaterIcon fontSize='large' style={{ paddingRight: '50px' }} />
+      {/* <StarsIcon fontSize='large' />
+      <WatchLaterIcon fontSize='large' /> */}
 
     </div>
   );

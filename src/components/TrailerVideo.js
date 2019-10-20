@@ -39,7 +39,8 @@ class TrailerVideo extends Component {
       return (
         <ReactPlayer
           url={`https://www.youtube.com/embed/${videoKey}`}
-          width="1504px"
+          // width="1504px"
+          width='100%'
           height="794px"
         />
       );

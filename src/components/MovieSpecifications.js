@@ -196,7 +196,7 @@ class MovieSpecifications extends React.Component {
 
           <h1
             style={{
-              padding: '100px 0px 50px',
+              padding: '50px 0px 50px',
               textAlign: 'center',
               width: '100%',
               color: '#D99A4E'
