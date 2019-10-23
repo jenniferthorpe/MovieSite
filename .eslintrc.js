@@ -21,6 +21,8 @@ module.exports = {
   rules: {
     "react/static-property-placement": "off",
     "quotes": ["error", "single"],
-    "react/jsx-filename-extension": "off"
+    "react/jsx-filename-extension": "off",
+    "react/state-in-constructor": "off"
   }
+
 };

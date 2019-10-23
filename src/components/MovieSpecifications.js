@@ -36,6 +36,8 @@ const classes = makeStyles(theme => ({
 }));
 
 class MovieSpecifications extends React.Component {
+  similarMoviesTitleRef = React.createRef();
+
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
@@ -44,14 +46,9 @@ class MovieSpecifications extends React.Component {
     }).isRequired
   };
 
-  constructor() {
-    super();
-    this.state = {
-      movieDetails: null,
-    };
-    this.similarMoviesTitleRef = React.createRef();
-  }
-
+  state = {
+    movieDetails: null,
+  };
 
   async componentDidMount() {
 

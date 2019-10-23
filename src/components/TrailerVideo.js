@@ -7,23 +7,14 @@ class TrailerVideo extends Component {
     id: PropTypes.number.isRequired
   };
 
-  constructor() {
-    super();
-    this.state = {
-      results: []
-    };
-  }
+  state = {
+    results: []
+  };
 
   async componentDidMount() {
     const { id: movieID } = this.props;
 
-    const {
-      results
-    } = await fetch(
-      `https://api.themoviedb.org/3/movie/${
-      movieID
-      }/videos?api_key=d2530355598301431a821ae172ea0b6f`
-    ).then(response => response.json());
+    const { results } = await fetch(`https://api.themoviedb.org/3/movie/${movieID}/videos?api_key=d2530355598301431a821ae172ea0b6f`).then(response => response.json());
 
     this.setState({
       results
@@ -39,9 +30,8 @@ class TrailerVideo extends Component {
       return (
         <ReactPlayer
           url={`https://www.youtube.com/embed/${videoKey}`}
-          // width="1504px"
           width='100%'
-          height="794px"
+          height="750px"
         />
       );
     }

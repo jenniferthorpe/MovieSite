@@ -9,8 +9,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import StarsIcon from '@material-ui/icons/Stars';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 import '../style/style.css'
 import { Link } from 'react-router-dom';
+
 
 
 const useStyles = makeStyles({
@@ -52,10 +54,18 @@ export default function TemporaryDrawer() {
                         <ListItemText primary="Home" />
                     </ListItem>
                 </Link>
-                <ListItem button key="2">
-                    <ListItemIcon><StarsIcon /></ListItemIcon>
-                    <ListItemText primary="Starred" />
-                </ListItem>
+                <Link to='/login'>
+                    <ListItem button key="login">
+                        <ListItemIcon><LockOpenIcon /></ListItemIcon>
+                        <ListItemText primary="Login" />
+                    </ListItem>
+                </Link>
+                <Link to='/account/favourites'>
+                    <ListItem button key="2">
+                        <ListItemIcon><StarsIcon /></ListItemIcon>
+                        <ListItemText primary="Favourites" />
+                    </ListItem>
+                </Link>
                 <ListItem button key="3">
                     <ListItemIcon><WatchLaterIcon /></ListItemIcon>
                     <ListItemText primary="Watch later" />

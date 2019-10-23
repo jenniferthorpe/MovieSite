@@ -7,12 +7,9 @@ class Reviews extends Component {
     id: PropTypes.number.isRequired
   };
 
-  constructor() {
-    super();
-    this.state = {
-      reviews: []
-    };
-  }
+  state = {
+    reviews: []
+  };
 
   async componentDidMount() {
     const { id: movieID } = this.props;
@@ -47,7 +44,6 @@ class Reviews extends Component {
               {content}
             </ShowMoreText>
           </div>
-          {/* <hr style={{ marginTop: '30px', border: '.5px solid wheat' }} /> */}
         </div >
       )
       );

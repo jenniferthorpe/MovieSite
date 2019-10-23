@@ -10,15 +10,10 @@ class MovieList extends React.Component {
     }).isRequired
   }
 
-  constructor() {
-    super();
-    this.state = {
-      movieList: [],
-      page: 1
-    };
-    this.loadMoreMovies = this.loadMoreMovies.bind(this);
-  }
-
+  state = {
+    movieList: [],
+    page: 1
+  };
 
   async componentDidMount() {
     this.fetchMovies();
@@ -26,7 +21,7 @@ class MovieList extends React.Component {
   }
 
 
-  loadMoreMovies() {
+  loadMoreMovies = () => {
     const { appRef } = this.props;
 
     const scrollHeight = appRef.current.scrollHeight - 1306;

@@ -43,3 +43,8 @@ async function myFunc() {
 }
 
 myFunc();
+
+
+
+            // const { request_token: token }  = await (await fetch('https://api.themoviedb.org/3/authentication/token/new?api_key=d2530355598301431a821ae172ea0b6f')).json()
+
