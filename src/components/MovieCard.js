@@ -111,8 +111,8 @@ function MovieCard(props) {
       <div className='language'>
         Language: {langFullText}
       </div>
-      {/* <StarsIcon fontSize='large' />
-      <WatchLaterIcon fontSize='large' /> */}
+      <StarsIcon className='star' fontSize='large' />
+      <WatchLaterIcon className='watchLater' fontSize='large' />
 
     </div>
   );

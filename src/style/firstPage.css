@@ -5,8 +5,8 @@
     "img h1 h1 h1 h1"
     "img releaseInfo releaseInfo rating rating"
     "img overview overview overview overview"
-    "img lang lang lang .";
-  grid-template-rows: 100px 50px auto 50px;
+    "img lang lang icons .";
+  grid-template-rows: 80px 50px auto 50px;
   grid-template-columns: 200px 1fr 1fr 1fr 1fr;
   grid-column-gap: 20px;
   width: 80%;
@@ -29,13 +29,27 @@
 .rating {
   grid-area: rating;
   margin-top: -13px;
+  justify-self: center;
 }
 
 .overview {
   grid-area: overview;
-  /* padding: 0px 100px 0px 0px; */
 }
 
 .language {
   grid-area: lang;
+}
+
+.star {
+  grid-area: icons;
+  justify-self: center;
+}
+
+.watchLater {
+  grid-area: icons;
+  justify-self: end;
+}
+
+.container:nth-child(even) {
+  background-color: rgba(245, 222, 179, 0.1);
 }
