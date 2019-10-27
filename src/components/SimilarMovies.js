@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import ReactPaginate from 'react-paginate';
 import '../style/style.css'
+import placeholder from '../images/placeholder.svg'
 
 
 const classes = makeStyles(theme => ({
@@ -16,9 +17,9 @@ const classes = makeStyles(theme => ({
   }
 }));
 
-
-
 class SimilarMovies extends Component {
+  posterPathRef = React.createRef();
+
   static propTypes = {
     id: PropTypes.number.isRequired,
     similarMoviesTitle: PropTypes.shape({
@@ -26,17 +27,11 @@ class SimilarMovies extends Component {
     }).isRequired
   };
 
-  constructor() {
-    super();
-    this.state = {
-      similarMovies: [],
-      page: 1,
-      pageArray: []
-    };
-    this.pagination = this.pagination.bind(this)
-    this.posterPathRef = React.createRef();
+  state = {
+    similarMovies: [],
+    page: 1,
+    pageArray: []
   }
-
 
   componentDidMount() {
     this.getMovieData();
@@ -44,18 +39,11 @@ class SimilarMovies extends Component {
 
 
   componentDidUpdate(prevProps, prevState) {
-    const { page, similarMovies } = this.state;
+    const { page } = this.state;
     if (page !== prevState.page) {
       this.getMovieData();
     }
 
-    const image404 = similarMovies.map(img => {
-      if (img.poster_path === null) {
-        // return this.posterPathRef.current.style.display = 'none'
-        console.log(img);
-
-      }
-    })
   }
 
 
@@ -64,10 +52,7 @@ class SimilarMovies extends Component {
     const { page } = this.state;
 
     const completeResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${
-      movieID
-      }/similar?api_key=d2530355598301431a821ae172ea0b6f&page=${page}`
-    ).then(response => response.json());
+      `https://api.themoviedb.org/3/movie/${movieID}/similar?api_key=d2530355598301431a821ae172ea0b6f&page=${page}`).then(response => response.json());
 
     const pageArray = [];
 
@@ -84,9 +69,7 @@ class SimilarMovies extends Component {
     });
   }
 
-
-
-  pagination(onPage) {
+  pagination = (onPage) => {
     const { selected } = onPage;
 
     const { similarMoviesTitle } = this.props;
@@ -106,22 +89,24 @@ class SimilarMovies extends Component {
             style={{
               width: '450px',
               height: '300px',
-              display: 'inline-flex',
-              flexWrap: 'wrap',
-              margin: '25px 10px'
-            }}
+              display: 'flex',
+              margin: '25px 10px',
+              flexShrink: 0
+            }
+            }
           >
             <div
               style={{
                 width: '200px',
-                height: '300px'
+                height: '300px',
               }}
             >
               <img
-                src={`https://image.tmdb.org/t/p/w200/${posterPath}`}
+                src={posterPath ? `https://image.tmdb.org/t/p/w200/${posterPath}` : placeholder} // ???
                 alt="movie poster"
                 style={{
-                  display: 'inline-block'
+                  display: 'inline-block',
+                  width: '200px'
                 }}
                 ref={this.posterPathRef}
               />
@@ -155,15 +140,15 @@ class SimilarMovies extends Component {
                 See more
                 </Button>
             </div>
-          </div>
+          </div >
         )
       )
 
       return (
-        <div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }} >
           {similarMapped}
-          <ReactPaginate pageCount={pageArray.length} pageRangeDisplayed={5} marginPagesDisplayed={1} onPageChange={this.pagination} containerClassName="paginationStyle" activeClassName='activePage' />
-        </div>
+          < ReactPaginate pageCount={pageArray.length} pageRangeDisplayed={5} marginPagesDisplayed={1} onPageChange={this.pagination} containerClassName="paginationStyle" activeClassName='activePage' />
+        </div >
       )
 
     };

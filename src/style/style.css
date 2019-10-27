@@ -92,7 +92,7 @@ ul.paginationStyle {
 .MuiDrawer-paperAnchorLeft {
   background-color: rgba(0,0,0,0.7) !important;
   padding-top: 60px;
-  height: 220px !important;
+  /* height: 220px !important; */
   border-radius: 0px 0px 130px;
 }
 .MuiButtonBase-root, .MuiListItemIcon-root{

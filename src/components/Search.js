@@ -15,12 +15,8 @@ class Search extends React.Component {
         }).isRequired
     }
 
-    constructor() {
-        super();
-        this.state = {
-            movieInfoList: []
-
-        }
+    state = {
+        movieInfoList: []
     }
 
     componentDidMount() {

@@ -3,12 +3,13 @@ import { Route, Switch, Link } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import './style/style.css';
 import { createMuiTheme } from '@material-ui/core/styles';
-
 import { ThemeProvider } from '@material-ui/styles';
 import NavigationMenu from './components/NavigationMenu';
 import MovieSpecifications from './components/MovieSpecifications';
 import MovieList from './components/MovieList';
 import Search from './components/Search';
+import Login from './components/Login';
+import Favourites from './components/Favourites';
 
 const theme = createMuiTheme({
   palette: {
@@ -28,14 +29,29 @@ const theme = createMuiTheme({
 });
 
 class App extends React.Component {
-  constructor() {
-    super()
-    this.appRef = React.createRef();
+  appRef = React.createRef()
+
+  state = {
+    sessionID: undefined,
   }
+
+  setData = (data) => {
+    console.log(data);
+    if (data && data.sessionID) {
+      console.log(data.sessionID);
+      this.setState({
+        sessionID: data.sessionID
+      })
+    }
+  }
+
 
   render() {
 
+    const { sessionID } = this.state;
+
     return (
+
       <ThemeProvider theme={theme}>
 
         <div className="App" ref={this.appRef}>
@@ -50,7 +66,7 @@ class App extends React.Component {
                 <h1
                   style={{
                     textAlign: 'center',
-                    paddingTop: '30px',
+                    padding: '30px 0px',
                     color: '#D99A4E'
                   }}
                 >
@@ -68,7 +84,19 @@ class App extends React.Component {
                 <Search />
               </Route>
 
+              <Route exact path="/login">
+                <h1 style={{
+                  position: 'relative', textAlign: 'center', marginTop: '100px'
+                }}>Login</h1>
+                <Login setData={this.setData} />
+              </Route>
+
+              <Route exact path="/account/favourites">
+                <Favourites sessionID={sessionID} />
+              </Route>
+
             </Switch>
+
           </Container>
         </div>
       </ThemeProvider>

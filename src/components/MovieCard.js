@@ -6,47 +6,10 @@ import StarsIcon from '@material-ui/icons/Stars';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import '../style/firstPage.css'
 
-const allStyle = {
-  // alignItems: 'top',
-  // textAlign: 'left',
-  // padding: '20px 50px',
-  // width: '80%',
-  // margin: '0 auto'
-};
 
-const imgBox = {
-  // width: '200px',
-  // minHeight: '300px',
-  // display: 'inline-block'
-};
 
-const img = {
-  // display: 'inline-block'
-};
-
-const movieInfo = {
-  // padding: '0px 30px 30px 37px'
-};
-
-const ratingsBlock = {
-  // textAlign: 'right',
-  // padding: '46px 0px 30px 30px'
-};
-
-const overviewBlock = {
-  // marginLeft: '255px',
-  // marginTop: '-190px'
-};
-
-const link = {
-  textDecoration: 'none'
-};
-
-const icons = {
-};
-
-function MovieCard(props) {
-  MovieCard.propTypes = {
+class MovieCard extends React.Component {
+  static propTypes = {
     id: PropTypes.number.isRequired,
     lang: PropTypes.string.isRequired,
     overview: PropTypes.string.isRequired,
@@ -56,46 +19,71 @@ function MovieCard(props) {
     voteAvg: PropTypes.number.isRequired
   };
 
-  const {
-    id: movieID,
-    lang,
-    overview,
-    release,
-    src,
-    title,
-    voteAvg
-  } = props;
 
-  let langFullText = lang;
+  // addFavourite = (event) => {
+  //   const movieID = event.currentTarget.dataset.value;
 
-  switch (lang) {
-    case 'en':
-      langFullText = 'english';
-      break;
-    case 'fr':
-      langFullText = 'french';
-      break;
-    case 'sp':
-      langFullText = 'spanish';
-      break;
-    default:
-      langFullText = lang;
-      break;
-  }
+  //   this.setState = {
 
-  return (
-    <div className='container'>
-      <Link to={{ pathname: `/movies/${movieID}` }} className='gridImage'>
-        <div style={imgBox}>
-          <img
-            src={`https://image.tmdb.org/t/p/w200${src}`}
-            style={img}
-            alt="movie"
-          />
+  //   }
+  // }
+
+
+
+  render() {
+
+    const {
+      id: movieID,
+      lang,
+      overview,
+      release,
+      src,
+      title,
+      voteAvg
+    } = this.props;
+
+    let langFullText = lang;
+
+    switch (lang) {
+      case 'en':
+        langFullText = 'english';
+        break;
+      case 'fr':
+        langFullText = 'french';
+        break;
+      case 'sp':
+        langFullText = 'spanish';
+        break;
+      default:
+        langFullText = lang;
+        break;
+    }
+
+    return (
+      <div className='container'>
+
+        <Link to={{ pathname: `/movies/${movieID}` }} className='gridImage'>
+          <div>
+            <img
+              src={`https://image.tmdb.org/t/p/w200${src}`}
+              alt="movie"
+            />
+          </div>
+        </Link>
+
+        <Link to={{ pathname: `/movies/${movieID}` }} style={{ textDecoration: 'none' }} className='title'>
+          <h1 style={{ color: '#D99A4E', fontSize: '1.6em' }}>{title}</h1>
+        </Link>
+
+        <div className='releaseInfo'>
+          Release Date: {release}
         </div>
-      </Link>
 
+        <div className='rating'>
+          Avarage rating: <span style={{ fontSize: '32px' }}>{voteAvg}</span>{' '}
+        </div>
 
+<<<<<<< HEAD
       <Link to={{ pathname: `/movies/${movieID}` }} style={link} className='title'>
         <h1 style={{ color: '#D99A4E', fontSize: '1.6em' }}>{title}</h1>
       </Link>
@@ -113,9 +101,29 @@ function MovieCard(props) {
       </div>
       <StarsIcon className='star' fontSize='large' />
       <WatchLaterIcon className='watchLater' fontSize='large' />
+=======
+        <div className='overview'>
+          {overview}
+        </div>
 
-    </div>
-  );
+        <div className='language'>
+          Language: {langFullText}
+        </div>
+
+        <div className='starDiv'>
+          <StarsIcon fontSize='large' className='star' data-value={movieID} onClick={this.addFavourite} />
+          <span className="tooltiptextFav">Add to favourites</span>
+        </div>
+>>>>>>> 26590255a3e10053ad39988d4af8f2db1159126d
+
+        <div className='watchLaterDiv'>
+          <WatchLaterIcon fontSize='large' className='watchLater' />
+          <span className="tooltiptextwatchLater">Add to watch later</span>
+        </div>
+
+      </div>
+    );
+  }
 }
 
 export default MovieCard;

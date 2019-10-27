@@ -89,30 +89,21 @@ class SearchAppBar extends React.Component {
     }).isRequired
   };
 
-
-  constructor() {
-    super();
-    this.state = {
-      searchValue: '',
-      showMenu: true,
-      scrollPosition: 0,
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.toggleMenu = this.toggleMenu.bind(this);
-    this.scrollToTop = this.scrollToTop.bind(this);
-
-  }
+  state = {
+    searchValue: '',
+    showMenu: true,
+    scrollPosition: 0,
+  };
 
   componentDidMount() {
     window.addEventListener('scroll', this.toggleMenu);
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({ searchValue: event.target.value })
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     event.preventDefault();
     const { searchValue } = this.state;
 
@@ -124,7 +115,7 @@ class SearchAppBar extends React.Component {
     })
   }
 
-  toggleMenu() {
+  toggleMenu = () => {
     const newPosition = window.scrollY;
     const { scrollPosition } = this.state;
 
@@ -136,18 +127,17 @@ class SearchAppBar extends React.Component {
     }
   }
 
-  scrollToTop() {
-
+  scrollToTop = () => {
     const { appRef } = this.props;
     appRef.current.scrollIntoView({ behavior: 'smooth' })
   }
 
 
+
   render() {
 
-    const { searchValue } = this.state;
+    const { searchValue, showMenu } = this.state;
     const { classes } = this.props;
-    const { showMenu } = this.state;
 
     return (
       <div className={classes.root}>
