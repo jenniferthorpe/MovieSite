@@ -6,11 +6,7 @@
     "img releaseInfo releaseInfo rating rating"
     "img overview overview overview overview"
     "img lang lang icons .";
-<<<<<<< HEAD
-  grid-template-rows: 80px 50px auto 50px;
-=======
   grid-template-rows: 100px 50px auto 50px;
->>>>>>> 26590255a3e10053ad39988d4af8f2db1159126d
   grid-template-columns: 200px 1fr 1fr 1fr 1fr;
   grid-column-gap: 20px;
   width: 75%;
@@ -19,8 +15,8 @@
   padding: 20px 40px;
 }
 
-.container:nth-child(even){
-    background-color: rgba(245,222,179,0.1);
+.container:nth-child(even) {
+  background-color: rgba(245, 222, 179, 0.1);
 }
 
 .gridImage {
@@ -50,68 +46,50 @@
   grid-area: lang;
 }
 
-<<<<<<< HEAD
-.star {
+.starDiv {
+  grid-area: icons;
+  justify-self: start;
+}
+
+.watchLaterDiv {
   grid-area: icons;
   justify-self: center;
 }
 
-.watchLater {
-  grid-area: icons;
-  justify-self: end;
+.starDiv .watchLaterDiv {
+  position: relative;
 }
 
-.container:nth-child(even) {
-  background-color: rgba(245, 222, 179, 0.1);
-}
-=======
-.starDiv {
-    grid-area: icons;
-    justify-self: start;
-}
+.starDiv .tooltiptextFav {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
 
-.watchLaterDiv {
-    grid-area: icons;
-    justify-self: center;
-}
-
-.starDiv .watchLaterDiv{
-    position: relative;
+  position: absolute;
+  z-index: 1;
 }
 
-  .starDiv .tooltiptextFav {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
+.watchLaterDiv .tooltiptextwatchLater {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
 
-    position: absolute;
-    z-index: 1;
-  }
-
-  .watchLaterDiv .tooltiptextwatchLater {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-
-    position: absolute;
-    z-index: 1;
-  }
-  
-  .starDiv:hover .tooltiptextFav {
-    visibility: visible;
+  position: absolute;
+  z-index: 1;
 }
 
-.watchLaterDiv:hover .tooltiptextwatchLater{
-    visibility: visible;
-    
-  }
-  
->>>>>>> 26590255a3e10053ad39988d4af8f2db1159126d
+.starDiv:hover .tooltiptextFav {
+  visibility: visible;
+}
+
+.watchLaterDiv:hover .tooltiptextwatchLater {
+  visibility: visible;
+}

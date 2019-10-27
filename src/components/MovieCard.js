@@ -83,25 +83,6 @@ class MovieCard extends React.Component {
           Avarage rating: <span style={{ fontSize: '32px' }}>{voteAvg}</span>{' '}
         </div>
 
-<<<<<<< HEAD
-      <Link to={{ pathname: `/movies/${movieID}` }} style={link} className='title'>
-        <h1 style={{ color: '#D99A4E', fontSize: '1.6em' }}>{title}</h1>
-      </Link>
-      <div className='releaseInfo'>
-        Release Date: {release}
-      </div>
-      <div className='rating'>
-        Avarage rating: <span style={{ fontSize: '32px' }}>{voteAvg}</span>{' '}
-      </div>
-      <div className='overview'>
-        {overview}
-      </div>
-      <div className='language'>
-        Language: {langFullText}
-      </div>
-      <StarsIcon className='star' fontSize='large' />
-      <WatchLaterIcon className='watchLater' fontSize='large' />
-=======
         <div className='overview'>
           {overview}
         </div>
@@ -114,7 +95,6 @@ class MovieCard extends React.Component {
           <StarsIcon fontSize='large' className='star' data-value={movieID} onClick={this.addFavourite} />
           <span className="tooltiptextFav">Add to favourites</span>
         </div>
->>>>>>> 26590255a3e10053ad39988d4af8f2db1159126d
 
         <div className='watchLaterDiv'>
           <WatchLaterIcon fontSize='large' className='watchLater' />
