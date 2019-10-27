@@ -34,12 +34,12 @@ class MovieList extends React.Component {
   async fetchMovies() {
     const { page } = this.state;
 
-    const { results: movieList2 } = await fetch(
+    const { results: movies } = await fetch(
       `https://api.themoviedb.org/3/trending/movie/week?api_key=d2530355598301431a821ae172ea0b6f&page=${page}`
     ).then(response => response.json());
 
     this.setState((state) => ({
-      movieList: state.movieList.concat(movieList2),
+      movieList: state.movieList.concat(movies),
       page: state.page + 1
     }))
   }
