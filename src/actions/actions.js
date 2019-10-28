@@ -1,7 +1,18 @@
+/* eslint-disable import/prefer-default-export */
 const APP_PREFIX = 'APP';
-const MOVIELIST = APP_PREFIX + '/MOVIELIST';
+export const MOVIELIST = `${APP_PREFIX}/MOVIELIST`;
+export const MOVIELISTPAGE = `${APP_PREFIX}/MOVIELISTPAGE`;
 
-const movieList = (movies) => ({
+export const movieListAction = ({ movies, page }) => ({
     type: MOVIELIST,
-    payload: movies
+    payload: {
+        movies,
+        page
+    }
 })
+
+export const movieListPageAction = (page) => ({
+    type: MOVIELISTPAGE,
+    payload: page
+})
+

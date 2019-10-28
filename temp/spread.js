@@ -12,6 +12,23 @@ function test(obj) {
 
 console.log(test({ adult: "male" }));
 
+
+const person = {
+  firstName: "Jennifer",
+  lastName: "Thorpe"
+}
+
+const actor = {
+  ...person,
+  famousMovies: [
+    'speed',
+    'interstellar'
+  ]
+}
+
+console.log(actor)
+console.log(person)
+
 //      prevState => (
 //          {
 //         movieDetails: {
