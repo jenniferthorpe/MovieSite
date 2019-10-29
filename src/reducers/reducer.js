@@ -1,33 +1,48 @@
 /* eslint-disable import/prefer-default-export */
-import { MOVIELIST, MOVIELISTPAGE } from '../actions/actions'
+import { MOVIELIST, SESSIONID } from '../actions/actions'
 
 const initialState = {
     movieList: [],
-    page: 1
+    page: 1,
+    counter: 0,
+    sessionID: undefined
 }
 
 export const movieListReducer = (state = initialState, { type, payload }) => {
     switch (type) {
         case MOVIELIST:
-            console.log(state.page)
-            console.log(payload.page)
-            if (state.page === payload.page) {
-                console.log('Hej');
-                return state;
+
+            if (state.counter === 0) {
+                return {
+                    ...state,
+                    movieList: [...state.movieList, ...payload.movies],
+                    page: payload.page + 1,
+                    counter: +1,
+                }
             }
 
             return {
                 ...state,
-                movieList: [...state.movieList, ...payload],
+                counter: +1,
+                movieList: [...state.movieList, ...payload.movies],
+                page: payload.page + 1,
             }
 
 
-        case MOVIELISTPAGE:
+        default:
+            return state;
+
+
+    }
+}
+
+export const userReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case SESSIONID:
             return {
                 ...state,
-                page: state.page + 1
+                sessionID: action.payload
             }
-
         default:
             return state;
     }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-// import Grid from '@material-ui/core/Grid';
 import StarsIcon from '@material-ui/icons/Stars';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import '../style/firstPage.css'

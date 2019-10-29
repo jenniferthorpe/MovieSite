@@ -2,24 +2,36 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
-import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux'
-import { devToolsEnhancer } from 'redux-devtools-extension';
-import App from './App';
+import { PersistGate } from 'redux-persist/integration/react'
+import { combineReducers, createStore } from 'redux';
 import * as serviceWorker from './serviceWorker';
-import { movieListReducer } from './reducers/reducer';
+import configureStore from './configureStore';
+import persistor from './configureStore';
+import App from './App';
+import { movieListReducer, userReducer } from './reducers/reducer';
+
+
+
+
+// const store = configureStore();
 
 
 const store = createStore(combineReducers({
-    movieList: movieListReducer
-}), devToolsEnhancer())
-
+    movieList: movieListReducer,
+    userInfo: userReducer,
+}))
 
 ReactDOM.render(
+
     <Provider store={store}>
+        {/* <PersistGate loading={null} persistor={persistor}> */}
+
         <BrowserRouter>
             <App />
         </BrowserRouter>
+        {/* </PersistGate> */}
+
     </Provider>,
     document.getElementById('root'));
 

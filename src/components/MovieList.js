@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import MovieCard from './MovieCard';
-import { movieListAction, movieListPageAction } from '../actions/actions';
+import { movieListAction } from '../actions/actions';
 
 
 
@@ -21,12 +21,11 @@ class MovieList extends React.Component {
 
 
   loadMoreMovies = () => {
-    const { appRef, setPage, page } = this.props;
+    const { appRef } = this.props;
 
     const scrollHeight = appRef.current.scrollHeight - 1306;
 
     if (window.scrollY === scrollHeight) {
-      setPage(page)
       this.fetchMovies()
     }
   }
@@ -38,8 +37,8 @@ class MovieList extends React.Component {
     const { results: movies } = await fetch(
       `https://api.themoviedb.org/3/trending/movie/week?api_key=d2530355598301431a821ae172ea0b6f&page=${page}`
     ).then(response => response.json());
-    setMovieList(movies, page);
 
+    setMovieList({ movies, page });
   }
 
 
@@ -80,23 +79,21 @@ class MovieList extends React.Component {
       );
     }
 
-    // window.jen=this
-    // console.log("rendered");
     return null;
   }
 }
 
 const mapStateToProps = (state) => {
-
   return {
     movieList: state.movieList.movieList,
     page: state.movieList.page
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  setMovieList: (movielist, page) => dispatch(movieListAction({ movielist, page })),
-  setPage: (page) => dispatch(movieListPageAction(page))
-})
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setMovieList: ({ movies, page }) => dispatch(movieListAction({ movies, page })),
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(MovieList);

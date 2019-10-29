@@ -31,26 +31,27 @@ const theme = createMuiTheme({
 class App extends React.Component {
   appRef = React.createRef()
 
-  state = {
-    sessionID: undefined,
-  }
+  // state = {
+  //   sessionID: undefined,
+  //  }
 
-  setData = (data) => {
-    console.log(data);
-    if (data && data.sessionID) {
-      console.log(data.sessionID);
-      this.setState({
-        sessionID: data.sessionID
-      })
-    }
-  }
+  // setData = (data) => {
+  //   console.log(data);
+  //   if (data && data.sessionID) {
+  //     console.log(data.sessionID);
+  //     this.setState({
+  //       sessionID: data.sessionID
+  //     })
+  //   }
+  // }
 
 
   render() {
 
-    const { sessionID } = this.state;
+    // const { sessionID } = this.state;
 
     return (
+
 
       <ThemeProvider theme={theme}>
 
@@ -92,7 +93,7 @@ class App extends React.Component {
               </Route>
 
               <Route exact path="/account/favourites">
-                <Favourites sessionID={sessionID} />
+                <Favourites />
               </Route>
 
             </Switch>
@@ -100,6 +101,7 @@ class App extends React.Component {
           </Container>
         </div>
       </ThemeProvider>
+
     );
   }
 }

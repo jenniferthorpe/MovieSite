@@ -1,6 +1,8 @@
 import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux'
+import { sessionIDAction } from '../actions/actions'
 
 
 const form = {
@@ -40,21 +42,18 @@ const errorcode2 = {
 }
 
 
-
-
 class Login extends Component {
     errorCodeRef = React.createRef();
 
     errorCodeRef2 = React.createRef();
 
     static propTypes = {
-        setData: PropTypes.func.isRequired
+
     }
 
     state = {
         username: '',
         password: '',
-        sessionID: '',
         token: ''
     }
 
@@ -72,7 +71,9 @@ class Login extends Component {
 
     handleSubmit = async (e) => {
         const { username, password } = this.state;
-        const { setData } = this.props;
+        const { setSessionID } = this.props;
+
+        // const { setData } = this.props;
         e.preventDefault();
 
         if (username && password) {
@@ -109,7 +110,8 @@ class Login extends Component {
 
                 if (responseSession.status === 200) {
                     const { session_id: sessionID } = await responseSession.json();
-                    setData({ sessionID })
+                    // setData({ sessionID })
+                    setSessionID(sessionID)
 
                 }
                 else {
@@ -133,7 +135,6 @@ class Login extends Component {
 
 
     render() {
-
         const { username, password } = this.state;
         return (
             <div>
@@ -157,4 +158,21 @@ class Login extends Component {
     }
 }
 
-export default Login
+const mapStateToProps = (state) => {
+    return {
+        sessionID: state.userInfo.sessionID
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setSessionID: (sessionID) => {
+            return dispatch(sessionIDAction(sessionID))
+        }
+    }
+}
+
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
