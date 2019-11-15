@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactPlayer from 'react-player';
+import { TMDBApi } from './TMDBApi';
 
 class TrailerVideo extends Component {
   static propTypes = {
@@ -14,7 +15,7 @@ class TrailerVideo extends Component {
   async componentDidMount() {
     const { id: movieID } = this.props;
 
-    const { results } = await fetch(`https://api.themoviedb.org/3/movie/${movieID}/videos?api_key=d2530355598301431a821ae172ea0b6f`).then(response => response.json());
+    const { results } = await TMDBApi.getTrailerVideo({ movieID })
 
     this.setState({
       results

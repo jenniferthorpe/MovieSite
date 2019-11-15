@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ShowMoreText from 'react-show-more-text';
+import { TMDBApi } from './TMDBApi';
 
 class Reviews extends Component {
   static propTypes = {
@@ -13,11 +14,8 @@ class Reviews extends Component {
 
   async componentDidMount() {
     const { id: movieID } = this.props;
-    const { results: reviews } = await fetch(
-      `https://api.themoviedb.org/3/movie/${
-      movieID
-      }/reviews?api_key=d2530355598301431a821ae172ea0b6f`
-    ).then(response => response.json());
+
+    const { results: reviews } = await TMDBApi.getReviews({ movieID });
 
     this.setState({
       reviews

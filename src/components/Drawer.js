@@ -10,10 +10,13 @@ import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import StarsIcon from '@material-ui/icons/Stars';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import '../style/style.css'
 import { Link } from 'react-router-dom';
 
-
+const linkStyle = {
+    textDecoration: 'none'
+}
 
 const useStyles = makeStyles({
     list: {
@@ -48,31 +51,43 @@ export default function TemporaryDrawer() {
             onKeyDown={toggleDrawer(side, false)}
         >
             <List>
-                <Link to='/'>
+                <Link to='/' style={linkStyle}>
                     <ListItem button key="1">
                         <ListItemIcon><HomeOutlinedIcon /></ListItemIcon>
                         <ListItemText primary="Home" />
                     </ListItem>
                 </Link>
-                <Link to='/login'>
+                <Link to='/login' style={linkStyle}>
                     <ListItem button key="login">
                         <ListItemIcon><LockOpenIcon /></ListItemIcon>
                         <ListItemText primary="Login" />
                     </ListItem>
                 </Link>
-                <Link to='/account/favourites'>
+                <Link to='/account/favorites' style={linkStyle}>
                     <ListItem button key="2">
                         <ListItemIcon><StarsIcon /></ListItemIcon>
-                        <ListItemText primary="Favourites" />
+                        <ListItemText primary="Favorites" />
                     </ListItem>
                 </Link>
-                <ListItem button key="3">
-                    <ListItemIcon><WatchLaterIcon /></ListItemIcon>
-                    <ListItemText primary="Watch later" />
-                </ListItem>
+                <Link to='/account/watchlater' style={linkStyle}>
+                    <ListItem button key="3" style={linkStyle}>
+                        <ListItemIcon><WatchLaterIcon /></ListItemIcon>
+                        <ListItemText primary="Watch later" />
+                    </ListItem>
+                </Link>
+                <Link to='/' style={linkStyle} >
+                    <ListItem button key="2" onClick={() => {
+                        return (
+                            sessionStorage.clear()
+                        )
+                    }}>
+                        <ListItemIcon><MeetingRoomIcon /></ListItemIcon>
+                        <ListItemText primary="Log out" />
+                    </ListItem>
+                </Link>
 
             </List>
-        </div>
+        </div >
     );
 
 

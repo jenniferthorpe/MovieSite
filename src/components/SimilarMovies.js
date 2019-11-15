@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import ReactPaginate from 'react-paginate';
 import '../style/style.css'
 import placeholder from '../images/placeholder.svg'
+import { TMDBApi } from './TMDBApi';
 
 
 const classes = makeStyles(theme => ({
@@ -51,8 +52,7 @@ class SimilarMovies extends Component {
     const { id: movieID } = this.props;
     const { page } = this.state;
 
-    const completeResponse = await fetch(
-      `https://api.themoviedb.org/3/movie/${movieID}/similar?api_key=d2530355598301431a821ae172ea0b6f&page=${page}`).then(response => response.json());
+    const completeResponse = await TMDBApi.getSimilar({ movieID, page })
 
     const pageArray = [];
 

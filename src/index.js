@@ -3,39 +3,54 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
 import { combineReducers, createStore } from 'redux';
+import { devToolsEnhancer } from 'redux-devtools-extension/logOnlyInProduction';
 import * as serviceWorker from './serviceWorker';
-import configureStore from './configureStore';
-import persistor from './configureStore';
+import { TMDBApi } from './components/TMDBApi'
+
 import App from './App';
-import { movieListReducer, userReducer } from './reducers/reducer';
+import { movieListReducer } from './reducers/movieListReducer';
+import { userReducer, initialState as initialStateUserReducer } from './reducers/userReducer';
+
+
+async function appStart() {
+
+    const sessionID = sessionStorage.getItem('sessionIDStorage')
+    const loginTest = await TMDBApi.getFavorites({ sessionID })
+    const initialState = {}
+
+    if (loginTest.status_code) {
+        sessionStorage.clear()
+    } else {
+        initialState.userInfo = {
+            ...initialStateUserReducer,
+            sessionID,
+        }
+    }
+
+    const rootReducer = combineReducers({
+        movieList: movieListReducer,
+        userInfo: userReducer,
+    })
 
 
 
+    const store = createStore(rootReducer, initialState, devToolsEnhancer())
 
-// const store = configureStore();
+    ReactDOM.render(
 
+        <Provider store={store}>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </Provider>,
+        document.getElementById('root'));
 
-const store = createStore(combineReducers({
-    movieList: movieListReducer,
-    userInfo: userReducer,
-}))
+    // If you want your app to work offline and load faster, you can change
+    // unregister() to register() below. Note this comes with some pitfalls.
+    // Learn more about service workers: https://bit.ly/CRA-PWA
+    serviceWorker.unregister();
 
-ReactDOM.render(
+}
 
-    <Provider store={store}>
-        {/* <PersistGate loading={null} persistor={persistor}> */}
-
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
-        {/* </PersistGate> */}
-
-    </Provider>,
-    document.getElementById('root'));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+appStart()

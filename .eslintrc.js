@@ -22,7 +22,9 @@ module.exports = {
     "react/static-property-placement": "off",
     "quotes": ["error", "single"],
     "react/jsx-filename-extension": "off",
-    "react/state-in-constructor": "off"
+    "react/state-in-constructor": "off",
+    "import/prefer-default-export": "off",
+    "react/require-default-props": "off",
   }
 
 };

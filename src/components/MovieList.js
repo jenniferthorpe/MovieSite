@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import MovieCard from './MovieCard';
 import { movieListAction } from '../actions/actions';
+import { TMDBApi } from './TMDBApi'
 
 
 
@@ -10,22 +11,34 @@ class MovieList extends React.Component {
   static propTypes = {
     appRef: PropTypes.shape({
       current: PropTypes.any
-    }).isRequired
+    }).isRequired,
+    page: PropTypes.number.isRequired,
+    setMovieList: PropTypes.func.isRequired,
+    movieList: PropTypes.array.isRequired
   }
 
 
-  async componentDidMount() {
-    this.fetchMovies();
+  componentDidMount() {
+
+    const { movieList } = this.props;
+    if (movieList.length < 20) {
+      this.fetchMovies();
+    }
     window.addEventListener('scroll', this.loadMoreMovies);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.loadMoreMovies)
   }
 
 
   loadMoreMovies = () => {
     const { appRef } = this.props;
 
+    const scrollHeightMin = appRef.current.scrollHeight - 1806;
     const scrollHeight = appRef.current.scrollHeight - 1306;
 
-    if (window.scrollY === scrollHeight) {
+    if (window.scrollY > scrollHeightMin && window.scrollY < scrollHeight) {
       this.fetchMovies()
     }
   }
@@ -34,10 +47,7 @@ class MovieList extends React.Component {
   async fetchMovies() {
     const { page, setMovieList } = this.props;
 
-    const { results: movies } = await fetch(
-      `https://api.themoviedb.org/3/trending/movie/week?api_key=d2530355598301431a821ae172ea0b6f&page=${page}`
-    ).then(response => response.json());
-
+    const { results: movies } = await TMDBApi.getTrending({ timeWindow: 'week', page });
     setMovieList({ movies, page });
   }
 
@@ -55,7 +65,7 @@ class MovieList extends React.Component {
             original_language: originalLanguage,
             adult,
             vote_count: voteCount,
-            vote_average: voteAvarage,
+            vote_average: voteAverage,
             overview,
             id
           }, i
@@ -68,7 +78,7 @@ class MovieList extends React.Component {
               lang={originalLanguage}
               adult={adult}
               voteNum={voteCount}
-              voteAvg={voteAvarage}
+              voteAvg={voteAverage}
               overview={overview}
               id={id}
               key={id}

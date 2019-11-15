@@ -9,7 +9,8 @@ import MovieSpecifications from './components/MovieSpecifications';
 import MovieList from './components/MovieList';
 import Search from './components/Search';
 import Login from './components/Login';
-import Favourites from './components/Favourites';
+import Favorites from './components/Favorites';
+import WatchLater from './components/WatchLater';
 
 const theme = createMuiTheme({
   palette: {
@@ -31,24 +32,8 @@ const theme = createMuiTheme({
 class App extends React.Component {
   appRef = React.createRef()
 
-  // state = {
-  //   sessionID: undefined,
-  //  }
-
-  // setData = (data) => {
-  //   console.log(data);
-  //   if (data && data.sessionID) {
-  //     console.log(data.sessionID);
-  //     this.setState({
-  //       sessionID: data.sessionID
-  //     })
-  //   }
-  // }
-
 
   render() {
-
-    // const { sessionID } = this.state;
 
     return (
 
@@ -92,8 +77,20 @@ class App extends React.Component {
                 <Login setData={this.setData} />
               </Route>
 
-              <Route exact path="/account/favourites">
-                <Favourites />
+              <Route exact path="/account/favorites">
+                <h1 style={{
+                  position: 'relative', textAlign: 'center', marginTop: '100px'
+                }}>Favorites</h1>
+
+                <Favorites />
+              </Route>
+
+              <Route exact path="/account/watchlater">
+                <h1 style={{
+                  position: 'relative', textAlign: 'center', marginTop: '100px'
+                }}>Watch Later</h1>
+
+                <WatchLater />
               </Route>
 
             </Switch>

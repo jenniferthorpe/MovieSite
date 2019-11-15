@@ -34,17 +34,17 @@ const promise = fetch('https://api.themoviedb.org/3/trending/movie/week?api_key=
 promise.then((responseInstance) => {
   const promise2 = responseInstance.json();
 
-  promise2.then((x)=>{
+  promise2.then((x) => {
 
   })
 })
 
-async function AwaitFunction (){
+async function AwaitFunction() {
   const responseInstance = await fetch('https://api.themoviedb.org/3/trending/movie/week?api_key=d2530355598301431a821ae172ea0b6f');
 }
 
 async function test() {
-return 9;
+  return 9;
 };
 
 const payload = test();
@@ -52,3 +52,8 @@ console.log(payload);
 payload.then((x) => {
   console.log(x)
 })
+
+
+
+
+        // const getFavourites = await (await fetch(`https://api.themoviedb.org/3/account/{account_id}/favorite/movies?api_key=d2530355598301431a821ae172ea0b6f&session_id=${sessionID}`)).json();

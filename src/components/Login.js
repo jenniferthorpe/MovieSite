@@ -2,7 +2,10 @@ import Button from '@material-ui/core/Button';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
-import { sessionIDAction } from '../actions/actions'
+import { withRouter } from 'react-router';
+import { sessionIDAction, userInfoAction, setFavoritesAction, movieDetailsAction } from '../actions/actions'
+import { TMDBApi } from './TMDBApi';
+
 
 
 const form = {
@@ -48,13 +51,18 @@ class Login extends Component {
     errorCodeRef2 = React.createRef();
 
     static propTypes = {
-
+        history: PropTypes.shape({
+            push: PropTypes.func.isRequired
+        }).isRequired,
+        setSessionID: PropTypes.func.isRequired,
+        setUsername: PropTypes.func.isRequired,
+        setMovieDetails: PropTypes.func,
+        setFavorites: PropTypes.func.isRequired,
     }
 
     state = {
-        username: '',
         password: '',
-        token: ''
+        username: ''
     }
 
     handleUsername = (e) => {
@@ -70,53 +78,38 @@ class Login extends Component {
     }
 
     handleSubmit = async (e) => {
-        const { username, password } = this.state;
-        const { setSessionID } = this.props;
+        const { password, username } = this.state;
+        const { setSessionID, setUsername, setMovieDetails, setFavorites, history } = this.props;
 
-        // const { setData } = this.props;
         e.preventDefault();
 
         if (username && password) {
 
-            const { request_token: token } = await fetch('https://api.themoviedb.org/3/authentication/token/new?api_key=d2530355598301431a821ae172ea0b6f').then(response => response.json())
+            const { request_token: token } = await TMDBApi.logInToken();
 
 
-            const response = await fetch('https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=d2530355598301431a821ae172ea0b6f', {
-                method: 'POST',
-                body: JSON.stringify(
-                    {
-                        'username': username,
-                        'password': password,
-                        'request_token': token
-                    }
-                ),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
+            const response = await TMDBApi.logInResponse({ username, password, token });
+
 
             if (response.status === 200) {
-                const responseSession = await fetch('https://api.themoviedb.org/3/authentication/session/new?api_key=d2530355598301431a821ae172ea0b6f', {
-                    method: 'POST',
-                    body: JSON.stringify(
-                        {
-                            'request_token': token
-                        }
-                    ),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
+
+                const responseSession = await TMDBApi.getSessionID({ token })
+
 
                 if (responseSession.status === 200) {
                     const { session_id: sessionID } = await responseSession.json();
-                    // setData({ sessionID })
-                    setSessionID(sessionID)
+
+                    const { results: favorites } = await TMDBApi.getFavorites({ sessionID })
+                    setSessionID(sessionID);
+                    setUsername({ username });
+                    setFavorites(favorites);
+
+                    history.push('/');
 
                 }
-                else {
-                    console.log(responseSession);
-                }
+
+                console.log(responseSession);
+
             }
             else {
                 this.errorCodeRef.current.style.display = 'block';
@@ -127,15 +120,14 @@ class Login extends Component {
             this.errorCodeRef2.current.style.display = 'block';
             this.errorCodeRef.current.style.display = 'none';
         }
-
-
     }
 
 
 
 
     render() {
-        const { username, password } = this.state;
+        const { password, username } = this.state;
+
         return (
             <div>
                 <form onSubmit={this.handleSubmit} style={form}>
@@ -160,7 +152,10 @@ class Login extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        sessionID: state.userInfo.sessionID
+        username: state.userInfo.username,
+        sessionID: state.userInfo.sessionID,
+        favoritesID: state.userInfo.favoritesID,
+        movieDetails: state.userInfo.movieDetailsByID
     }
 }
 
@@ -168,11 +163,17 @@ const mapDispatchToProps = (dispatch) => {
     return {
         setSessionID: (sessionID) => {
             return dispatch(sessionIDAction(sessionID))
-        }
+        },
+        setUsername: ({ username }) => {
+            return dispatch(userInfoAction({ username }));
+        },
+        setFavorites: (favorites) => {
+            return dispatch(setFavoritesAction(favorites))
+        },
     }
 }
 
 
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));

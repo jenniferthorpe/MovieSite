@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { withRouter } from 'react-router';
 import MovieCard from './MovieCard';
 import { Style } from '../style/style.css'
+import { TMDBApi } from './TMDBApi';
 
 
 
@@ -42,9 +43,9 @@ class Search extends React.Component {
             }
         } } = this.props
 
-        const { results: searchResults } = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=d2530355598301431a821ae172ea0b6f&query=${query}`).then((response) => response.json());
+        const { results: searchResults } = await TMDBApi.searchResults({ query })
+        const movieInfo = searchResults.map(({ id: movieID }) => TMDBApi.getMovieDetails({ movieID }))
 
-        const movieInfo = searchResults.map(({ id: movieID }) => fetch(`https://api.themoviedb.org/3/movie/${movieID}?api_key=d2530355598301431a821ae172ea0b6f`).then(response => response.json()))
         const movieInfoList = await Promise.all(movieInfo);
 
         this.setState({
