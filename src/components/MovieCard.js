@@ -82,61 +82,71 @@ class MovieCard extends React.Component {
   handleWatchLater = async (e) => {
     const { history, setWatchLater, sessionID, watchLater, id, lang, overview, release, src, title, voteAvg, voteNum } = this.props;
     const movieID = Number(e.currentTarget.dataset.value);
-
+    console.log(watchLater);
     if (sessionID === '') {
       return history.push('/login')
     }
 
-    if (watchLater[movieID] !== undefined && watchLater[movieID].id === movieID) {
-      delete watchLater[movieID]
-      setWatchLater({
-        ...watchLater
-      })
-      TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: false })
+    if (watchLater.entities.watchLater !== undefined) {
 
+      if (watchLater.entities.watchLater[movieID] === undefined) {
+        const newFav = {
+          ...watchLater.entities.watchLater,
+          [movieID]: {
+            id, lang, overview, release, src, title, voteAvg, voteNum
+          }
+        }
+        const array = Object.values(newFav)
+        setWatchLater(array)
+        TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: true })
+      }
+      else if (watchLater.entities.watchLater[movieID].id === movieID) {
+        delete watchLater.entities.watchLater[movieID]
+        const array = Object.values(watchLater.entities.watchLater)
+        console.log(array);
+        setWatchLater(array)
+        TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: false })
+      }
     }
     else {
-      setWatchLater({
+      const newWatchLater = {
         [movieID]: {
           id, lang, overview, release, src, title, voteAvg, voteNum
-        },
-        ...watchLater
-      })
+        }
+      }
+      const array2 = Object.values(newWatchLater)
+      setWatchLater(array2)
       TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: true })
     }
+
   }
 
-
-
   // handleWatchLater = async (e) => {
-  //   const { history, setWatchLater, sessionID, watchLater } = this.props;
+  //   const { history, setWatchLater, sessionID, watchLater, id, lang, overview, release, src, title, voteAvg, voteNum } = this.props;
   //   const movieID = Number(e.currentTarget.dataset.value);
 
   //   if (sessionID === '') {
   //     return history.push('/login')
   //   }
 
-  //   const newWatchLater = watchLater.filter(({ id }) => {
-  //     return id !== movieID
-  //   })
+  //   if (watchLater[movieID] !== undefined && watchLater[movieID].id === movieID) {
+  //     delete watchLater[movieID]
+  //     setWatchLater({
+  //       ...watchLater
+  //     })
+  //     TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: false })
 
-  //   if (newWatchLater.length === watchLater.length) {
-  //     newWatchLater.push(await TMDBApi.getMovieDetails({ movieID }))
   //   }
-
-  //   watchLater.map(({ id }) => {
-  //     TMDBApi.addFavorite({ sessionID, movieIDMedia: id, bool: false })
-  //   })
-  //   await Promise.all(watchLater)
-
-  //   newWatchLater.map(({ id }) => {
-  //     TMDBApi.addFavorite({ sessionID, movieIDMedia: id, bool: true })
-  //   })
-  //   await Promise.all(newWatchLater)
-
-  //   setWatchLater(newWatchLater);
+  //   else {
+  //     setWatchLater({
+  //       [movieID]: {
+  //         id, lang, overview, release, src, title, voteAvg, voteNum
+  //       },
+  //       ...watchLater
+  //     })
+  //     TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: true })
+  //   }
   // }
-
 
 
   render() {
@@ -168,6 +178,8 @@ class MovieCard extends React.Component {
         langFullText = lang;
         break;
     }
+
+    console.log(this.props.watchLater);
 
     return (
       <div className='container'>
@@ -201,6 +213,7 @@ class MovieCard extends React.Component {
           Language: {langFullText}
         </div>
 
+        {/* GÖR CHECK FÖR TOMT = FAVORTIES.ENTITIES = UNDEFINED */}
         <div className='starDiv'>
           {this.props.favorites.entities.favorites[movieID] !== undefined ?
             <StarIcon fontSize='large' className='star' data-value={movieID} onClick={this.handleFavorites} /> :
@@ -210,7 +223,10 @@ class MovieCard extends React.Component {
         </div>
 
         <div className='watchLaterDiv'>
-          <WatchLaterIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} />
+          {this.props.watchLater.entities.watchLater[movieID] !== undefined ?
+            <WatchLaterIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} /> :
+            <PlaylistAddIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} />
+          }
           <span className="tooltiptextwatchLater">Add to watch later</span>
         </div>
 

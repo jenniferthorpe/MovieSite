@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
-import { sessionIDAction, userInfoAction, setFavoritesAction, movieDetailsAction } from '../actions/actions'
+import { sessionIDAction, userInfoAction, setFavoritesAction, setWatchLaterAction } from '../actions/actions'
 import { TMDBApi } from './TMDBApi';
 
 
@@ -79,7 +79,7 @@ class Login extends Component {
 
     handleSubmit = async (e) => {
         const { password, username } = this.state;
-        const { setSessionID, setUsername, setMovieDetails, setFavorites, history } = this.props;
+        const { setSessionID, setUsername, setWatchLater, setFavorites, history } = this.props;
 
         e.preventDefault();
 
@@ -100,10 +100,12 @@ class Login extends Component {
                     const { session_id: sessionID } = await responseSession.json();
 
                     const { results: favorites } = await TMDBApi.getFavorites({ sessionID })
+                    const { results: watchLater } = await TMDBApi.getWatchLater({ sessionID })
                     setSessionID(sessionID);
                     setUsername({ username });
                     console.log(favorites);
                     setFavorites(favorites);
+                    setWatchLater(watchLater);
 
                     history.push('/');
 
@@ -156,6 +158,7 @@ const mapStateToProps = (state) => {
         username: state.userInfo.username,
         sessionID: state.userInfo.sessionID,
         favoritesID: state.userInfo.favoritesID,
+        watchLater: state.userInfo.watchLater,
         movieDetails: state.userInfo.movieDetailsByID
     }
 }
@@ -170,6 +173,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setFavorites: (favorites) => {
             return dispatch(setFavoritesAction(favorites))
+        },
+        setWatchLater: (watchLater) => {
+            return dispatch(setWatchLaterAction(watchLater))
         },
     }
 }
