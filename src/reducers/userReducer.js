@@ -31,15 +31,17 @@ export const userReducer = (state = initialState, { type, payload }) => {
       }
 
     case FAVORITES:
-      // const myData = { favorites: payload };
-      // const favoriteEntity = new schema.Entity('favorites');
-      // const mySchema = { favorites: [favoriteEntity] };
-      // const normalizedData = normalize(myData, mySchema);
-
-      sessionStorage.setItem('favoriteStorage', JSON.stringify(payload));
+      const myData = { favorites: payload };
+      // console.log(payload);
+      // payload.map(obj => obj.icon = true)
+      const favoriteEntity = new schema.Entity('favorites');
+      const mySchema = { favorites: [favoriteEntity] };
+      const normalizedData = normalize(myData, mySchema);
+      console.log(normalizedData);
+      sessionStorage.setItem('favoriteStorage', JSON.stringify(normalizedData));
       return {
         ...state,
-        favorites: payload,
+        favorites: normalizedData,
       }
 
     case WATCH_LATER:

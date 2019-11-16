@@ -102,6 +102,7 @@ class Login extends Component {
                     const { results: favorites } = await TMDBApi.getFavorites({ sessionID })
                     setSessionID(sessionID);
                     setUsername({ username });
+                    console.log(favorites);
                     setFavorites(favorites);
 
                     history.push('/');

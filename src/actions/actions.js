@@ -48,9 +48,9 @@ export const movieDetailsAction = ({ id, posterPath, title, releaseDate, origina
     }
 })
 
-export const setFavoritesAction = (favoritesObj) => ({
+export const setFavoritesAction = (favorites) => ({
     type: FAVORITES,
-    payload: favoritesObj
+    payload: favorites
 })
 
 export const setWatchLaterAction = (watchLaterArray) => ({

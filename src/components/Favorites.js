@@ -40,31 +40,34 @@ class Favorites extends Component {
 
         console.log(favorites);
 
-        for (const obj in favorites) {
-            const {
-                src: posterPath,
-                title,
-                release: releaseDate,
-                lang: originalLanguage,
-                adult,
-                voteNum: voteCount,
-                voteAvg: voteAverage,
-                overview,
-                id } = favorites[obj]
+        if (favorites.entities !== undefined) {
 
-            return < MovieCard
-                src={posterPath}
-                title={title}
-                release={releaseDate}
-                lang={originalLanguage}
-                adult={adult}
-                voteNum={voteCount}
-                voteAvg={voteAverage}
-                overview={overview}
-                id={id}
-                key={id}
-            />
+            for (const obj in favorites.entities.favorites) {
+                const {
+                    src: posterPath,
+                    title,
+                    release: releaseDate,
+                    lang: originalLanguage,
+                    adult,
+                    voteNum: voteCount,
+                    voteAvg: voteAverage,
+                    overview,
+                    id } = favorites.entities.favorites[obj]
 
+                return < MovieCard
+                    src={posterPath}
+                    title={title}
+                    release={releaseDate}
+                    lang={originalLanguage}
+                    adult={adult}
+                    voteNum={voteCount}
+                    voteAvg={voteAverage}
+                    overview={overview}
+                    id={id}
+                    key={id}
+                />
+
+            }
         }
 
 

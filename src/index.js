@@ -19,7 +19,7 @@ async function appStart() {
     const loginTest = await TMDBApi.getFavorites({ sessionID })
     const initialState = {}
 
-    if (loginTest.status_code) {
+    if (sessionID === null || loginTest.status_code) {
         sessionStorage.clear()
     } else {
         initialState.userInfo = {

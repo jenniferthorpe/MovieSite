@@ -22,7 +22,7 @@ export const movieListReducer = (state = initialState, { type, payload }) => {
       const movieEntity = new schema.Entity('movies');
       const mySchema = { movies: [movieEntity] };
       const normalizedData = normalize(myData, mySchema);
-
+      console.log(normalizedData);
       if (state.counter === 0) {
         return {
           ...state,

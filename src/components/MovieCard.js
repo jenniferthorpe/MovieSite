@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
@@ -39,28 +40,43 @@ class MovieCard extends React.Component {
   handleFavorites = async (e) => {
     const { history, setFavorites, sessionID, favorites, id, lang, overview, release, src, title, voteAvg, voteNum } = this.props;
     const movieID = Number(e.currentTarget.dataset.value);
-
+    console.log(favorites);
     if (sessionID === '') {
       return history.push('/login')
     }
 
-    if (favorites[movieID] !== undefined && favorites[movieID].id === movieID) {
-      delete favorites[movieID]
-      setFavorites({
-        ...favorites
-      })
-      TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: false })
+    if (favorites.entities.favorites !== undefined) {
 
+      if (favorites.entities.favorites[movieID] === undefined) {
+        const newFav = {
+          ...favorites.entities.favorites,
+          [movieID]: {
+            id, lang, overview, release, src, title, voteAvg, voteNum
+          }
+        }
+        const array = Object.values(newFav)
+        setFavorites(array)
+        TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: true })
+      }
+      else if (favorites.entities.favorites[movieID].id === movieID) {
+        delete favorites.entities.favorites[movieID]
+        const array = Object.values(favorites.entities.favorites)
+        console.log(array);
+        setFavorites(array)
+        TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: false })
+      }
     }
     else {
-      setFavorites({
+      const newFav = {
         [movieID]: {
           id, lang, overview, release, src, title, voteAvg, voteNum
-        },
-        ...favorites
-      })
+        }
+      }
+      const array2 = Object.values(newFav)
+      setFavorites(array2)
       TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: true })
     }
+
   }
 
   handleWatchLater = async (e) => {
@@ -137,6 +153,7 @@ class MovieCard extends React.Component {
 
     let langFullText = lang;
 
+
     switch (lang) {
       case 'en':
         langFullText = 'english';
@@ -185,7 +202,10 @@ class MovieCard extends React.Component {
         </div>
 
         <div className='starDiv'>
-          <StarIcon fontSize='large' className='star' data-value={movieID} onClick={this.handleFavorites} />
+          {this.props.favorites.entities.favorites[movieID] !== undefined ?
+            <StarIcon fontSize='large' className='star' data-value={movieID} onClick={this.handleFavorites} /> :
+            <StarBorderIcon fontSize='large' className='star' data-value={movieID} onClick={this.handleFavorites} />
+          }
           <span className="tooltiptextFav">Add to favourites</span>
         </div>
 
