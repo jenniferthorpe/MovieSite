@@ -9,18 +9,27 @@ class WatchLater extends Component {
         history: PropTypes.shape({
             push: PropTypes.func.isRequired
         }).isRequired,
-        movieDetails: PropTypes.shape({
-            posterPath: PropTypes.string,
-            title: PropTypes.string,
-            releaseDate: PropTypes.string,
-            originalLanguage: PropTypes.string,
-            overview: PropTypes.string,
-            adult: PropTypes.bool,
-            id: PropTypes.number,
-            voteAverage: PropTypes.number,
-            voteCount: PropTypes.number,
-        }),
-        sessionID: PropTypes.string.isRequired
+
+        sessionID: PropTypes.string.isRequired,
+
+        watchLater: PropTypes.shape({
+            entities: PropTypes.shape({
+                watchLater: PropTypes.shape({
+                    poster_path: PropTypes.string,
+                    title: PropTypes.string,
+                    release_date: PropTypes.string,
+                    original_language: PropTypes.string,
+                    overview: PropTypes.string,
+                    adult: PropTypes.bool,
+                    id: PropTypes.number,
+                    vote_average: PropTypes.number,
+                    vote_count: PropTypes.number,
+                })
+            }),
+            result: {
+                watchLater: PropTypes.arrayOf(PropTypes.number).isRequired
+            }
+        }).isRequired,
     }
 
 
@@ -35,71 +44,44 @@ class WatchLater extends Component {
 
 
     render() {
-        const { watchLater } = this.props;
+        const { watchLater: {
+            result: { watchLater: watchLaterArr },
+            entities: { watchLater: watchLaterObj }
+        } } = this.props;
 
+        if (watchLaterArr) {
 
-        // for (const obj in watchLater) {
-        //     const {
-        //         src: posterPath,
-        //         title,
-        //         release: releaseDate,
-        //         lang: originalLanguage,
-        //         adult,
-        //         voteNum: voteCount,
-        //         voteAvg: voteAverage,
-        //         overview,
-        //         id } = watchLater[obj]
+            return watchLaterArr.map(movieID => {
+                const {
+                    poster_path: posterPath,
+                    title,
+                    release_date: releaseDate,
+                    original_language: originalLanguage,
+                    adult,
+                    vote_number: voteCount,
+                    vote_average: voteAverage,
+                    overview,
+                    id
+                } = watchLaterObj[movieID]
 
-        //     return < MovieCard
-        //         src={posterPath}
-        //         title={title}
-        //         release={releaseDate}
-        //         lang={originalLanguage}
-        //         adult={adult}
-        //         voteNum={voteCount}
-        //         voteAvg={voteAverage}
-        //         overview={overview}
-        //         id={id}
-        //         key={id}
-        //     />
+                return <MovieCard
+                    src={posterPath}
+                    title={title}
+                    release={releaseDate}
+                    lang={originalLanguage}
+                    adult={adult}
+                    voteNum={voteCount}
+                    voteAvg={voteAverage}
+                    overview={overview}
+                    id={id}
+                    key={id}
+                />
 
-        // }
-        if (watchLater && watchLater.length > 0) {
-            return watchLater.map(
-                (
-                    {
-                        poster_path: posterPath,
-                        title,
-                        release_date: releaseDate,
-                        original_language: originalLanguage,
-                        adult,
-                        vote_count: voteCount,
-                        vote_average: voteAverage,
-                        overview,
-                        id
-                    }, i
-                ) => (
-                        <div>
-                            <MovieCard
-                                src={posterPath}
-                                title={title}
-                                release={releaseDate}
-                                lang={originalLanguage}
-                                adult={adult}
-                                voteNum={voteCount}
-                                voteAvg={voteAverage}
-                                overview={overview}
-                                id={id}
-                                key={id}
-                                index={i}
-                            />
-                        </div >
-                    )
-            )
+            })
+
         }
 
-        return <div style={{ textAlign: 'center' }
-        }> You don´t have any movies in your list yet.</div >;
+        return <div style={{ textAlign: 'center' }}> You don´t have any movies in your list yet.</div >;
     }
 
 }

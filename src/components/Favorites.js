@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import MovieCard from './MovieCard'
-import { movieDetailsAction } from '../actions/actions'
 
 class Favorites extends Component {
     static propTypes = {
@@ -21,7 +20,25 @@ class Favorites extends Component {
             voteAverage: PropTypes.number,
             voteCount: PropTypes.number,
         }),
-        sessionID: PropTypes.string.isRequired
+        sessionID: PropTypes.string.isRequired,
+        favorites: PropTypes.shape({
+            result: PropTypes.shape({
+                favorites: PropTypes.arrayOf(PropTypes.number)
+            }).isRequired,
+            entities: PropTypes.shape({
+                favorites: PropTypes.shape({
+                    posterPath: PropTypes.string,
+                    title: PropTypes.string,
+                    releaseDate: PropTypes.string,
+                    originalLanguage: PropTypes.string,
+                    overview: PropTypes.string,
+                    adult: PropTypes.bool,
+                    id: PropTypes.number,
+                    voteAverage: PropTypes.number,
+                    voteCount: PropTypes.number,
+                })
+            })
+        }).isRequired,
     }
 
 
@@ -36,25 +53,29 @@ class Favorites extends Component {
 
 
     render() {
-        const { favorites } = this.props;
+        const {
+            favorites: {
+                result: { favorites: favoritesArr },
+                entities: { favorites: favoritesObj }
+            },
+        } = this.props;
 
-        console.log(favorites);
+        if (favoritesArr) {
 
-        if (favorites.entities !== undefined) {
-
-            for (const obj in favorites.entities.favorites) {
+            return favoritesArr.map(movieID => {
                 const {
-                    src: posterPath,
+                    poster_path: posterPath,
                     title,
-                    release: releaseDate,
-                    lang: originalLanguage,
+                    release_date: releaseDate,
+                    original_language: originalLanguage,
                     adult,
-                    voteNum: voteCount,
-                    voteAvg: voteAverage,
+                    vote_number: voteCount,
+                    vote_average: voteAverage,
                     overview,
-                    id } = favorites.entities.favorites[obj]
+                    id
+                } = favoritesObj[movieID]
 
-                return < MovieCard
+                return <MovieCard
                     src={posterPath}
                     title={title}
                     release={releaseDate}
@@ -67,12 +88,12 @@ class Favorites extends Component {
                     key={id}
                 />
 
-            }
+            })
+
         }
 
 
-        return <div style={{ textAlign: 'center' }
-        }> You don´t have any favourites yet.</div >;
+        return <div style={{ textAlign: 'center' }}> You don´t have any favourites yet.</div >;
     }
 
 }
@@ -82,28 +103,4 @@ const mapState = (state) => ({
     favorites: state.userInfo.favorites,
 })
 
-const mapDispatch = (dispatch) => ({
-    setMovieDetails: ({
-        posterPath,
-        title,
-        releaseDate,
-        originalLanguage,
-        adult,
-        voteCount,
-        voteAverage,
-        overview,
-        id }) => dispatch(movieDetailsAction({
-            posterPath,
-            title,
-            releaseDate,
-            originalLanguage,
-            adult,
-            voteCount,
-            voteAverage,
-            overview,
-            id,
-            key: id
-        }))
-})
-
-export default connect(mapState, mapDispatch)(withRouter(Favorites));
+export default connect(mapState)(withRouter(Favorites));

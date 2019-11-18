@@ -7,7 +7,6 @@ import { sessionIDAction, userInfoAction, setFavoritesAction, setWatchLaterActio
 import { TMDBApi } from './TMDBApi';
 
 
-
 const form = {
     height: '20vh',
     display: 'flex',
@@ -56,7 +55,7 @@ class Login extends Component {
         }).isRequired,
         setSessionID: PropTypes.func.isRequired,
         setUsername: PropTypes.func.isRequired,
-        setMovieDetails: PropTypes.func,
+        setWatchLater: PropTypes.func.isRequired,
         setFavorites: PropTypes.func.isRequired,
     }
 
@@ -87,14 +86,11 @@ class Login extends Component {
 
             const { request_token: token } = await TMDBApi.logInToken();
 
-
             const response = await TMDBApi.logInResponse({ username, password, token });
-
 
             if (response.status === 200) {
 
                 const responseSession = await TMDBApi.getSessionID({ token })
-
 
                 if (responseSession.status === 200) {
                     const { session_id: sessionID } = await responseSession.json();
@@ -103,16 +99,14 @@ class Login extends Component {
                     const { results: watchLater } = await TMDBApi.getWatchLater({ sessionID })
                     setSessionID(sessionID);
                     setUsername({ username });
-                    console.log(favorites);
                     setFavorites(favorites);
                     setWatchLater(watchLater);
 
                     history.push('/');
-
                 }
 
+                // eslint-disable-next-line no-console
                 console.log(responseSession);
-
             }
             else {
                 this.errorCodeRef.current.style.display = 'block';
