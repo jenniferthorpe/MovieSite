@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import '../style/firstPage.css';
 import { withRouter } from 'react-router'
@@ -36,11 +37,10 @@ class MovieCard extends React.Component {
     release: 'Unknown',
   }
 
-
   handleFavorites = async (e) => {
     const { history, setFavorites, sessionID, favorites, id, lang, overview, release, src, title, voteAvg, voteNum } = this.props;
     const movieID = Number(e.currentTarget.dataset.value);
-    console.log(favorites);
+
     if (sessionID === '') {
       return history.push('/login')
     }
@@ -61,7 +61,7 @@ class MovieCard extends React.Component {
       else if (favorites.entities.favorites[movieID].id === movieID) {
         delete favorites.entities.favorites[movieID]
         const array = Object.values(favorites.entities.favorites)
-        console.log(array);
+
         setFavorites(array)
         TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: false })
       }
@@ -82,7 +82,7 @@ class MovieCard extends React.Component {
   handleWatchLater = async (e) => {
     const { history, setWatchLater, sessionID, watchLater, id, lang, overview, release, src, title, voteAvg, voteNum } = this.props;
     const movieID = Number(e.currentTarget.dataset.value);
-    console.log(watchLater);
+
     if (sessionID === '') {
       return history.push('/login')
     }
@@ -103,7 +103,7 @@ class MovieCard extends React.Component {
       else if (watchLater.entities.watchLater[movieID].id === movieID) {
         delete watchLater.entities.watchLater[movieID]
         const array = Object.values(watchLater.entities.watchLater)
-        console.log(array);
+
         setWatchLater(array)
         TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: false })
       }
@@ -120,33 +120,6 @@ class MovieCard extends React.Component {
     }
 
   }
-
-  // handleWatchLater = async (e) => {
-  //   const { history, setWatchLater, sessionID, watchLater, id, lang, overview, release, src, title, voteAvg, voteNum } = this.props;
-  //   const movieID = Number(e.currentTarget.dataset.value);
-
-  //   if (sessionID === '') {
-  //     return history.push('/login')
-  //   }
-
-  //   if (watchLater[movieID] !== undefined && watchLater[movieID].id === movieID) {
-  //     delete watchLater[movieID]
-  //     setWatchLater({
-  //       ...watchLater
-  //     })
-  //     TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: false })
-
-  //   }
-  //   else {
-  //     setWatchLater({
-  //       [movieID]: {
-  //         id, lang, overview, release, src, title, voteAvg, voteNum
-  //       },
-  //       ...watchLater
-  //     })
-  //     TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: true })
-  //   }
-  // }
 
 
   render() {
@@ -180,6 +153,7 @@ class MovieCard extends React.Component {
     }
 
     console.log(this.props.watchLater);
+
 
     return (
       <div className='container'>
@@ -224,7 +198,7 @@ class MovieCard extends React.Component {
 
         <div className='watchLaterDiv'>
           {this.props.watchLater.entities.watchLater[movieID] !== undefined ?
-            <WatchLaterIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} /> :
+            <PlaylistAddCheckIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} /> :
             <PlaylistAddIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} />
           }
           <span className="tooltiptextwatchLater">Add to watch later</span>

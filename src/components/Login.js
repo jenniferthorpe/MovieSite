@@ -103,7 +103,6 @@ class Login extends Component {
                     const { results: watchLater } = await TMDBApi.getWatchLater({ sessionID })
                     setSessionID(sessionID);
                     setUsername({ username });
-                    console.log(favorites);
                     setFavorites(favorites);
                     setWatchLater(watchLater);
 
