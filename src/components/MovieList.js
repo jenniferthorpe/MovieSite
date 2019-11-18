@@ -14,7 +14,18 @@ class MovieList extends React.Component {
     }).isRequired,
     page: PropTypes.number.isRequired,
     setMovieList: PropTypes.func.isRequired,
-    movieList: PropTypes.array.isRequired
+    movieList: PropTypes.arrayOf(PropTypes.shape({
+      poster_path: PropTypes.string,
+      title: PropTypes.string,
+      release_date: PropTypes.string,
+      original_language: PropTypes.string,
+      overview: PropTypes.string,
+      adult: PropTypes.bool,
+      id: PropTypes.number,
+      vote_average: PropTypes.number,
+      vote_count: PropTypes.number,
+
+    })).isRequired
   }
 
 

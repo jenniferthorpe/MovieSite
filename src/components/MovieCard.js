@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable react/prefer-stateless-function */
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -20,16 +21,42 @@ class MovieCard extends React.Component {
       push: PropTypes.func.isRequired
     }).isRequired,
     setFavorites: PropTypes.func,
+    setWatchLater: PropTypes.func,
     sessionID: PropTypes.string.isRequired,
-    favorites: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.number,
-      lang: PropTypes.string,
-      overview: PropTypes.string,
-      release: PropTypes.string,
-      src: PropTypes.string,
-      title: PropTypes.string,
-      voteAvg: PropTypes.number,
-    }))
+    favorites: PropTypes.shape({
+      entities: PropTypes.shape({
+        favorites: PropTypes.shape({
+          id: PropTypes.number,
+          lang: PropTypes.string,
+          overview: PropTypes.string,
+          release: PropTypes.string,
+          src: PropTypes.string,
+          title: PropTypes.string,
+          voteAvg: PropTypes.number,
+        })
+      })
+    }).isRequired,
+    watchLater: PropTypes.shape({
+      entities: PropTypes.shape({
+        watchLater: PropTypes.shape({
+          id: PropTypes.number,
+          lang: PropTypes.string,
+          overview: PropTypes.string,
+          release: PropTypes.string,
+          src: PropTypes.string,
+          title: PropTypes.string,
+          voteAvg: PropTypes.number,
+        })
+      })
+    }).isRequired,
+    id: PropTypes.number,
+    lang: PropTypes.string,
+    overview: PropTypes.string,
+    release: PropTypes.string,
+    src: PropTypes.string,
+    title: PropTypes.string,
+    voteAvg: PropTypes.number,
+    voteNum: PropTypes.number,
   };
 
   static defaultProps = {
@@ -38,38 +65,51 @@ class MovieCard extends React.Component {
   }
 
   handleFavorites = async (e) => {
-    const { history, setFavorites, sessionID, favorites, id, lang, overview, release, src, title, voteAvg, voteNum } = this.props;
+    const {
+      history,
+      setFavorites,
+      sessionID,
+      favorites: { entities: { favorites } },
+      id,
+      lang: original_language,
+      overview,
+      release: release_date,
+      src: poster_path,
+      title,
+      voteAvg: vote_average,
+      voteNum: vote_count
+    } = this.props;
     const movieID = Number(e.currentTarget.dataset.value);
 
     if (sessionID === '') {
-      return history.push('/login')
+      history.push('/login')
+      return;
     }
 
-    if (favorites.entities.favorites !== undefined) {
-
-      if (favorites.entities.favorites[movieID] === undefined) {
-        const newFav = {
-          ...favorites.entities.favorites,
-          [movieID]: {
-            id, lang, overview, release, src, title, voteAvg, voteNum
-          }
+    if (favorites[movieID] === undefined) {
+      const newFav = {
+        ...favorites, //Flytta till reducern!
+        [movieID]: {
+          id, original_language, overview, release_date, poster_path, title, vote_average, vote_count
         }
-        const array = Object.values(newFav)
-        setFavorites(array)
-        TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: true })
       }
-      else if (favorites.entities.favorites[movieID].id === movieID) {
-        delete favorites.entities.favorites[movieID]
-        const array = Object.values(favorites.entities.favorites)
-
-        setFavorites(array)
-        TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: false })
-      }
+      const array = Object.values(newFav)
+      setFavorites(array)
+      TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: true })
     }
+
+    else if (favorites[movieID].id === movieID) {
+      delete favorites[movieID]
+      const array = Object.values(favorites)
+
+      setFavorites(array)
+      TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: false })
+    }
+
     else {
       const newFav = {
         [movieID]: {
-          id, lang, overview, release, src, title, voteAvg, voteNum
+          id, original_language, overview, release_date, poster_path, title, vote_average, vote_count
         }
       }
       const array2 = Object.values(newFav)
@@ -80,29 +120,30 @@ class MovieCard extends React.Component {
   }
 
   handleWatchLater = async (e) => {
-    const { history, setWatchLater, sessionID, watchLater, id, lang, overview, release, src, title, voteAvg, voteNum } = this.props;
+    const { history, setWatchLater, sessionID, watchLater: { entities: { watchLater } }, id, lang: original_language, overview, release: release_date, src: poster_path, title, voteAvg: vote_average, voteNum: vote_count } = this.props;
     const movieID = Number(e.currentTarget.dataset.value);
 
     if (sessionID === '') {
-      return history.push('/login')
+      history.push('/login')
+      return;
     }
 
-    if (watchLater.entities.watchLater !== undefined) {
+    if (watchLater !== undefined) {
 
-      if (watchLater.entities.watchLater[movieID] === undefined) {
+      if (watchLater[movieID] === undefined) {
         const newFav = {
-          ...watchLater.entities.watchLater,
+          ...watchLater,
           [movieID]: {
-            id, lang, overview, release, src, title, voteAvg, voteNum
+            id, original_language, overview, release_date, poster_path, title, vote_average, vote_count
           }
         }
         const array = Object.values(newFav)
         setWatchLater(array)
         TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: true })
       }
-      else if (watchLater.entities.watchLater[movieID].id === movieID) {
-        delete watchLater.entities.watchLater[movieID]
-        const array = Object.values(watchLater.entities.watchLater)
+      else if (watchLater[movieID].id === movieID) {
+        delete watchLater[movieID]
+        const array = Object.values(watchLater)
 
         setWatchLater(array)
         TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: false })
@@ -111,7 +152,7 @@ class MovieCard extends React.Component {
     else {
       const newWatchLater = {
         [movieID]: {
-          id, lang, overview, release, src, title, voteAvg, voteNum
+          id, original_language, overview, release_date, poster_path, title, vote_average, vote_count
         }
       }
       const array2 = Object.values(newWatchLater)
@@ -120,7 +161,6 @@ class MovieCard extends React.Component {
     }
 
   }
-
 
   render() {
 
@@ -132,6 +172,8 @@ class MovieCard extends React.Component {
       src,
       title,
       voteAvg,
+      watchLater: { entities: { watchLater } },
+      favorites: { entities: { favorites } },
     } = this.props;
 
     let langFullText = lang;
@@ -151,9 +193,6 @@ class MovieCard extends React.Component {
         langFullText = lang;
         break;
     }
-
-    console.log(this.props.watchLater);
-
 
     return (
       <div className='container'>
@@ -187,9 +226,8 @@ class MovieCard extends React.Component {
           Language: {langFullText}
         </div>
 
-        {/* GÖR CHECK FÖR TOMT = FAVORTIES.ENTITIES = UNDEFINED */}
         <div className='starDiv'>
-          {this.props.favorites.entities.favorites[movieID] !== undefined ?
+          {favorites && favorites[movieID] ?
             <StarIcon fontSize='large' className='star' data-value={movieID} onClick={this.handleFavorites} /> :
             <StarBorderIcon fontSize='large' className='star' data-value={movieID} onClick={this.handleFavorites} />
           }
@@ -197,8 +235,8 @@ class MovieCard extends React.Component {
         </div>
 
         <div className='watchLaterDiv'>
-          {this.props.watchLater.entities.watchLater[movieID] !== undefined ?
-            <PlaylistAddCheckIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} /> :
+          {watchLater && watchLater[movieID] ?
+            <WatchLaterIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} /> :
             <PlaylistAddIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} />
           }
           <span className="tooltiptextwatchLater">Add to watch later</span>
@@ -217,7 +255,7 @@ const mapState = (state) => ({
 })
 
 const mapDispatch = (dispatch) => ({
-  setFavorites: (detailsObj) => dispatch(setFavoritesAction(detailsObj)),
+  setFavorites: (detailsArr) => dispatch(setFavoritesAction(detailsArr)),
   setWatchLater: (detailsArr) => dispatch(setWatchLaterAction(detailsArr))
 })
 

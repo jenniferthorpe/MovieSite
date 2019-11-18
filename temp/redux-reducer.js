@@ -21,7 +21,14 @@ const appReducer = (state = initialState, { type, payload }) => {
                 // lastName: payload.lastName
                 ...payload,
             }
-
+        case MOVIE_SPECIFICATIONS:
+            return {
+                ...state,
+                movieSpecByID: {
+                    ...state.movieSpecByID,
+                    [payload.id]: payload.details
+                }
+            }
 
         default:
             return state

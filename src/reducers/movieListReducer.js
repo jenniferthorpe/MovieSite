@@ -1,8 +1,7 @@
+/* eslint-disable no-case-declarations */
 /* eslint-disable import/prefer-default-export */
 import { normalize, schema } from 'normalizr';
 import { MOVIELIST, MOVIE_SPECIFICATIONS } from '../actions/actions'
-
-
 
 
 const initialState = {
@@ -13,16 +12,17 @@ const initialState = {
   movieSpecByID: undefined,
 }
 
+const movieEntity = new schema.Entity('movies');
+const mySchema = { movies: [movieEntity] };
+
 export const movieListReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case MOVIELIST:
       const movieList = [...state.movieList, ...payload.movies]
 
       const myData = { movies: movieList };
-      const movieEntity = new schema.Entity('movies');
-      const mySchema = { movies: [movieEntity] };
       const normalizedData = normalize(myData, mySchema);
-      console.log(normalizedData);
+
       if (state.counter === 0) {
         return {
           ...state,
@@ -48,8 +48,9 @@ export const movieListReducer = (state = initialState, { type, payload }) => {
           ...state.movieSpecByID,
           [payload.id]: payload.details
         }
-
       }
+
+
 
 
     default:

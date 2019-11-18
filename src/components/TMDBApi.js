@@ -43,16 +43,16 @@ export class TMDBApi extends React.Component {
         return TMDBApi.fetchData({ url: 'account/{account_id}/favorite/movies', queryString: `session_id=${sessionID}` })
     }
 
-    static addFavorite({ sessionID, movieIDMedia, bool }) {
-        return TMDBApi.postDataLists({ url: 'account/{account_id}/favorite', queryString: `session_id=${sessionID}`, movieIDMedia, bool })
+    static addFavorite({ sessionID, movieID, bool }) {
+        return TMDBApi.postDataLists({ url: 'account/{account_id}/favorite', queryString: `session_id=${sessionID}`, movieID, bool })
     }
 
     static getWatchLater({ sessionID }) {
         return TMDBApi.fetchData({ url: 'account/{account_id}/watchlist/movies', queryString: `session_id=${sessionID}` })
     }
 
-    static addWatchLater({ sessionID, movieIDMedia, bool }) {
-        return TMDBApi.postDataLists({ url: 'account/{account_id}/watchlist', queryString: `session_id=${sessionID}`, movieIDMedia, bool })
+    static addWatchLater({ sessionID, movieID, bool }) {
+        return TMDBApi.postDataLists({ url: 'account/{account_id}/watchlist', queryString: `session_id=${sessionID}`, movieID, bool })
     }
 
 
@@ -79,13 +79,13 @@ export class TMDBApi extends React.Component {
 
     }
 
-    static async postDataLists({ url = '', parameters = '', url2 = '', queryString = '', movieIDMedia = '', bool = '' }) {
+    static async postDataLists({ url = '', parameters = '', url2 = '', queryString = '', movieID = '', bool = '' }) {
         return fetch(`https://api.themoviedb.org/3/${url}${parameters}${url2}?api_key=d2530355598301431a821ae172ea0b6f&${queryString}`, {
             method: 'POST',
             body: JSON.stringify(
                 {
                     'media_type': 'movie',
-                    'media_id': Number(movieIDMedia),
+                    'media_id': Number(movieID),
                     'favorite': bool
                 }
             ),
