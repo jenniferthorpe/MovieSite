@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import WatchLaterIcon from '@material-ui/icons/WatchLater';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
 import TrailerVideo from './TrailerVideo';
 import Reviews from './Reviews';
 import SimilarMovies from './SimilarMovies';
@@ -52,6 +52,9 @@ class MovieSpecifications extends React.Component {
         id: PropTypes.string.isRequired
       }).isRequired
     }).isRequired,
+    history: PropTypes.shape({
+      push: PropTypes.func.isRequired
+    }).isRequired,
     setMovieSpecification: PropTypes.func.isRequired,
     genres: PropTypes.arrayOf(PropTypes.any),
     adult: PropTypes.bool,
@@ -68,51 +71,54 @@ class MovieSpecifications extends React.Component {
       title: PropTypes.string,
       imdbID: PropTypes.string,
       releaseDate: PropTypes.number,
-    })
+    }),
+    favorites: PropTypes.shape({
+      entities: PropTypes.shape({
+        favorites: PropTypes.shape({
+          id: PropTypes.number,
+          lang: PropTypes.string,
+          overview: PropTypes.string,
+          release: PropTypes.string,
+          src: PropTypes.string,
+          title: PropTypes.string,
+          voteAvg: PropTypes.number,
+        })
+      })
+    }).isRequired,
+    watchLater: PropTypes.shape({
+      entities: PropTypes.shape({
+        watchLater: PropTypes.shape({
+          id: PropTypes.number,
+          lang: PropTypes.string,
+          overview: PropTypes.string,
+          release: PropTypes.string,
+          src: PropTypes.string,
+          title: PropTypes.string,
+          voteAvg: PropTypes.number,
+        })
+      })
+    }).isRequired,
+    setFavorites: PropTypes.func,
+    setWatchLater: PropTypes.func,
+    sessionID: PropTypes.string.isRequired,
   };
 
-  state = {
-    movieData: undefined,
-  }
 
-
-  componentDidMount() {
+  async componentDidMount() {
     const {
-      movieSpecifications,
-      match: {
-        params: { id: movieID }
-      },
-    } = this.props;
-
-    const movieIDNum = Number(movieID);
-
-
-    if (movieSpecifications !== undefined && movieSpecifications[movieIDNum] !== undefined) {
-      if (movieSpecifications[movieIDNum].movieID !== (movieID)) {
-        this.getDetailsFromApi();
-      }
-
-    }
-    else {
-      this.getDetailsFromApi();
-
-    }
-  }
-
-  async getDetailsFromApi() {
-    const {
-      match: {
-        params: { id: movieID }
-      },
       setMovieSpecification,
+      match: {
+        params: { id: movieID }
+      },
     } = this.props;
 
     const movieIDNum = Number(movieID);
 
-    const movieDetails = await TMDBApi.getMovieDetails({ movieID: movieIDNum })
-    const { id, genres, adult, runtime, backdrop_path: backdropPath, title, imdbID, release_date: releaseDate } = movieDetails
+
+    const { id, genres, adult, runtime, backdrop_path: backdropPath, title, imdbID, release_date: releaseDate } = await TMDBApi.getMovieDetails({ movieID: movieIDNum })
     setMovieSpecification({ id, genres, adult, runtime, backdropPath, title, movieID: movieIDNum, imdbID, releaseDate });
   }
+
 
   handleFavorites = async () => {
     const {
@@ -123,7 +129,7 @@ class MovieSpecifications extends React.Component {
       setFavorites,
       sessionID,
       favorites,
-      movieList
+      movieSpecifications,
     } = this.props;
 
     const movieIDNum = Number(movieID);
@@ -133,65 +139,19 @@ class MovieSpecifications extends React.Component {
       return;
     }
 
-    if ((movieList && movieList.entities !== undefined) && (movieList.entities.movies && movieList.entities.movies[movieIDNum] !== undefined)) {
-      const {
-        lang: original_language,
-        overview,
-        release: release_date,
-        src: poster_path,
-        title,
-        voteAvg: vote_average,
-        voteNum: vote_count } = movieList.entities.movies[movieIDNum]
-
-      this.setState({
-        movieData: {
-          original_language,
-          overview,
-          release_date,
-          poster_path,
-          title,
-          vote_average,
-          vote_count
-        }
-      })
-    }
-
-    else {
-      const { original_language,
-        overview,
-        release_date,
-        poster_path,
-        title,
-        vote_average,
-        vote_count } = await TMDBApi.getMovieDetails({ movieID: movieIDNum });
-
-      this.setState({
-        movieData: {
-          original_language,
-          overview,
-          release_date,
-          poster_path,
-          title,
-          vote_average,
-          vote_count
-        }
-      })
-    }
-
-
-
-    const { original_language,
+    const { original_language: originalLanguage,
       overview,
-      release_date,
-      poster_path,
+      release_date: releaseDate,
+      poster_path: posterPath,
       title,
-      vote_average,
-      vote_count } = this.state;
+      vote_average: voteAverage,
+      vote_count: voteCount } = movieSpecifications[movieID]
+
+
 
     if (favorites.entities !== undefined && favorites.entities.favorites !== undefined) {
 
       if (favorites.entities.favorites[movieIDNum] !== undefined && favorites.entities.favorites[movieIDNum].id === movieIDNum) {
-
 
         delete favorites.entities.favorites[movieIDNum]
         const array = Object.values(favorites.entities.favorites)
@@ -202,7 +162,7 @@ class MovieSpecifications extends React.Component {
         const newFav = {
           ...favorites.entities.favorites,
           [movieIDNum]: {
-            id: movieIDNum, original_language, overview, release_date, poster_path, title, vote_average, vote_count
+            id: movieIDNum, originalLanguage, overview, releaseDate, posterPath, title, voteAverage, voteCount
           }
         }
         const array = Object.values(newFav)
@@ -215,7 +175,7 @@ class MovieSpecifications extends React.Component {
       const newFav = {
         ...favorites.entities.favorites,
         [movieIDNum]: {
-          id: movieIDNum, original_language, overview, release_date, poster_path, title, vote_average, vote_count
+          id: movieIDNum, originalLanguage, overview, releaseDate, posterPath, title, voteAverage, voteCount
         }
       }
       const array = Object.values(newFav)
@@ -226,10 +186,81 @@ class MovieSpecifications extends React.Component {
 
 
 
+  handleWatchLater = async () => {
+    const {
+      match: {
+        params: { id: movieID }
+      },
+      history,
+      setWatchLater,
+      sessionID,
+      watchLater,
+      movieSpecifications
+    } = this.props;
+
+    const movieIDNum = Number(movieID);
+
+    if (sessionID === '') {
+      history.push('/login')
+      return;
+    }
+
+    const { original_language: originalLanguage,
+      overview,
+      release_date: releaseDate,
+      poster_path: posterPath,
+      title,
+      vote_average: voteAverage,
+      vote_count: voteCount } = movieSpecifications[movieID]
+
+
+    if (watchLater.entities !== undefined && watchLater.entities.watchLater !== undefined) {
+
+      if (watchLater.entities.watchLater[movieIDNum] !== undefined && watchLater.entities.watchLater[movieIDNum].id === movieIDNum) {
+        delete watchLater.entities.watchLater[movieIDNum]
+        const array = Object.values(watchLater.entities.watchLater)
+        setWatchLater(array)
+        TMDBApi.addWatchLater({ sessionID, movieID: movieIDNum, bool: false })
+      }
+      else {
+        const newFav = {
+          ...watchLater.entities.watchLater,
+          [movieIDNum]: {
+            id: movieIDNum, originalLanguage, overview, releaseDate, posterPath, title, voteAverage, voteCount
+          }
+        }
+        const array = Object.values(newFav)
+        setWatchLater(array)
+        TMDBApi.addWatchLater({ sessionID, movieID: movieIDNum, bool: true })
+      }
+    }
+
+    else {
+      const newFav = {
+        ...watchLater.entities.watchLater,
+        [movieIDNum]: {
+          id: movieIDNum, originalLanguage, overview, releaseDate, posterPath, title, voteAverage, voteCount
+        }
+      }
+      const array = Object.values(newFav)
+      setWatchLater(array)
+      TMDBApi.addWatchLater({ sessionID, movieID: movieIDNum, bool: true })
+    }
+  }
+
+
+
 
   render() {
 
-    const { movieSpecifications, watchLater: { entities: { watchLater: watchLaterObj } }, favorites: { entities: { favorites: favoritesObj } } } = this.props;
+    const {
+      movieSpecifications,
+      watchLater: {
+        entities: { watchLater: watchLaterObj }
+      },
+      favorites: {
+        entities: { favorites: favoritesObj }
+      } } = this.props;
 
     if (movieSpecifications !== undefined) {
 
@@ -239,7 +270,6 @@ class MovieSpecifications extends React.Component {
         }
       } = this.props;
 
-      const movieIDNum = movieID;
 
       if (movieSpecifications[movieID] !== undefined) {
 
@@ -293,7 +323,7 @@ class MovieSpecifications extends React.Component {
 
               <div className='watchLaterDiv' style={{ display: 'inline-block' }}>
                 {watchLaterObj && watchLaterObj[movieID] ?
-                  <WatchLaterIcon fontSize='large' className='watchLater' data-value={movieIDNum} onClick={this.handleWatchLater} /> :
+                  <PlaylistAddCheckIcon fontSize='large' className='watchLater' data-value={movieIDNum} onClick={this.handleWatchLater} /> :
                   <PlaylistAddIcon fontSize='large' className='watchLater' data-value={movieIDNum} onClick={this.handleWatchLater} />
                 }
                 <span className="tooltiptextwatchLater">Add to watch later</span>
@@ -404,7 +434,6 @@ const mapState = (state) => ({
   favorites: state.userInfo.favorites,
   movieSpecifications: state.movieList.movieSpecByID,
   sessionID: state.userInfo.sessionID,
-  movieList: state.movieList.movieListNormalized
 })
 
 const mapDispatchToProps = (dispatch) => {

@@ -51,10 +51,12 @@ export const userReducer = (state = initialState, { type, payload }) => {
       const normalizedData = normalize(myData, mySchema);
 
       sessionStorage.setItem('favoriteStorage', JSON.stringify(normalizedData));
+
       return {
         ...state,
         favorites: normalizedData,
       }
+
 
     case WATCH_LATER:
       const myData2 = { watchLater: payload };

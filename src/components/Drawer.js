@@ -13,6 +13,9 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import '../style/style.css'
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux'
+import { sessionIDAction } from '../actions/actions';
+
 
 const linkStyle = {
     textDecoration: 'none'
@@ -26,7 +29,7 @@ const useStyles = makeStyles({
 });
 
 
-export default function TemporaryDrawer() {
+function TemporaryDrawer(props) {
     const classes = useStyles();
     const [state, setState] = React.useState({
         top: false,
@@ -34,7 +37,6 @@ export default function TemporaryDrawer() {
         bottom: false,
         right: false,
     });
-
     const toggleDrawer = (side, open) => event => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
             return;
@@ -57,12 +59,6 @@ export default function TemporaryDrawer() {
                         <ListItemText primary="Home" />
                     </ListItem>
                 </Link>
-                <Link to='/login' style={linkStyle}>
-                    <ListItem button key="login">
-                        <ListItemIcon><LockOpenIcon /></ListItemIcon>
-                        <ListItemText primary="Login" />
-                    </ListItem>
-                </Link>
                 <Link to='/account/favorites' style={linkStyle}>
                     <ListItem button key="2">
                         <ListItemIcon><StarsIcon /></ListItemIcon>
@@ -75,16 +71,25 @@ export default function TemporaryDrawer() {
                         <ListItemText primary="Watch later" />
                     </ListItem>
                 </Link>
-                <Link to='/' style={linkStyle} >
-                    <ListItem button key="2" onClick={() => {
-                        return (
-                            sessionStorage.clear()
-                        )
-                    }}>
-                        <ListItemIcon><MeetingRoomIcon /></ListItemIcon>
-                        <ListItemText primary="Log out" />
-                    </ListItem>
-                </Link>
+                {props.sessionID ?
+                    <Link to='/' style={linkStyle} >
+                        <ListItem button key="2" onClick={() => {
+                            return (
+                                props.setSessionID(''),
+                                sessionStorage.clear()
+                            )
+                        }}>
+                            <ListItemIcon><MeetingRoomIcon /></ListItemIcon>
+                            <ListItemText primary="Log out" />
+                        </ListItem>
+                    </Link> :
+                    <Link to='/login' style={linkStyle}>
+                        <ListItem button key="login">
+                            <ListItemIcon><LockOpenIcon /></ListItemIcon>
+                            <ListItemText primary="Login" />
+                        </ListItem>
+                    </Link>
+                }
 
             </List>
         </div >
@@ -102,3 +107,12 @@ export default function TemporaryDrawer() {
         </div>
     );
 }
+
+const mapState = (state) => ({
+    sessionID: state.userInfo.sessionID
+})
+const mapDispatch = (dispatch) => ({
+    setSessionID: (sessionID) => dispatch(sessionIDAction(sessionID))
+})
+
+export default connect(mapState, mapDispatch)(TemporaryDrawer)

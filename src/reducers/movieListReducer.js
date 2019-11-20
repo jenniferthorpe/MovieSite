@@ -17,11 +17,14 @@ const mySchema = { movies: [movieEntity] };
 
 export const movieListReducer = (state = initialState, { type, payload }) => {
   switch (type) {
+
     case MOVIELIST:
       const movieList = [...state.movieList, ...payload.movies]
 
       const myData = { movies: movieList };
       const normalizedData = normalize(myData, mySchema);
+
+
 
       if (state.counter === 0) {
         return {

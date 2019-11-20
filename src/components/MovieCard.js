@@ -7,7 +7,6 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
-import WatchLaterIcon from '@material-ui/icons/WatchLater';
 import '../style/firstPage.css';
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
@@ -79,6 +78,7 @@ class MovieCard extends React.Component {
       voteAvg: vote_average,
       voteNum: vote_count
     } = this.props;
+
     const movieID = Number(e.currentTarget.dataset.value);
 
     if (sessionID === '') {
@@ -88,14 +88,14 @@ class MovieCard extends React.Component {
 
     if (favorites[movieID] === undefined) {
       const newFav = {
-        ...favorites, //Flytta till reducern!
+        ...favorites,
         [movieID]: {
           id, original_language, overview, release_date, poster_path, title, vote_average, vote_count
         }
       }
       const array = Object.values(newFav)
       setFavorites(array)
-      TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: true })
+      TMDBApi.addFavorite({ sessionID, movieID, bool: true })
     }
 
     else if (favorites[movieID].id === movieID) {
@@ -103,7 +103,7 @@ class MovieCard extends React.Component {
       const array = Object.values(favorites)
 
       setFavorites(array)
-      TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: false })
+      TMDBApi.addFavorite({ sessionID, movieID, bool: false })
     }
 
     else {
@@ -114,7 +114,7 @@ class MovieCard extends React.Component {
       }
       const array2 = Object.values(newFav)
       setFavorites(array2)
-      TMDBApi.addFavorite({ sessionID, movieIDMedia: movieID, bool: true })
+      TMDBApi.addFavorite({ sessionID, movieID, bool: true })
     }
 
   }
@@ -139,14 +139,14 @@ class MovieCard extends React.Component {
         }
         const array = Object.values(newFav)
         setWatchLater(array)
-        TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: true })
+        TMDBApi.addWatchLater({ sessionID, movieID, bool: true })
       }
       else if (watchLater[movieID].id === movieID) {
         delete watchLater[movieID]
         const array = Object.values(watchLater)
 
         setWatchLater(array)
-        TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: false })
+        TMDBApi.addWatchLater({ sessionID, movieID, bool: false })
       }
     }
     else {
@@ -157,7 +157,7 @@ class MovieCard extends React.Component {
       }
       const array2 = Object.values(newWatchLater)
       setWatchLater(array2)
-      TMDBApi.addWatchLater({ sessionID, movieIDMedia: movieID, bool: true })
+      TMDBApi.addWatchLater({ sessionID, movieID, bool: true })
     }
 
   }
@@ -236,7 +236,7 @@ class MovieCard extends React.Component {
 
         <div className='watchLaterDiv'>
           {watchLater && watchLater[movieID] ?
-            <WatchLaterIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} /> :
+            <PlaylistAddCheckIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} /> :
             <PlaylistAddIcon fontSize='large' className='watchLater' data-value={movieID} onClick={this.handleWatchLater} />
           }
           <span className="tooltiptextwatchLater">Add to watch later</span>

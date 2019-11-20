@@ -4,7 +4,7 @@ export class TMDBApi extends React.Component {
 
 
     static getTrending({ timeWindow, page }) {
-        return TMDBApi.fetchData({ url: 'trending/movies/', parameters: timeWindow, url2: '', queryString: `page=${page}` });
+        return TMDBApi.fetchData({ url: 'trending/movie/', parameters: timeWindow, url2: '', queryString: `page=${page}` });
     }
 
     static getMovieDetails({ movieID }) {
@@ -52,7 +52,7 @@ export class TMDBApi extends React.Component {
     }
 
     static addWatchLater({ sessionID, movieID, bool }) {
-        return TMDBApi.postDataLists({ url: 'account/{account_id}/watchlist', queryString: `session_id=${sessionID}`, movieID, bool })
+        return TMDBApi.postDataLists2({ url: 'account/{account_id}/watchlist', queryString: `session_id=${sessionID}`, movieID, bool })
     }
 
 
@@ -87,6 +87,23 @@ export class TMDBApi extends React.Component {
                     'media_type': 'movie',
                     'media_id': Number(movieID),
                     'favorite': bool
+                }
+            ),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+    }
+
+    static async postDataLists2({ url = '', parameters = '', url2 = '', queryString = '', movieID = '', bool = '' }) {
+        return fetch(`https://api.themoviedb.org/3/${url}${parameters}${url2}?api_key=d2530355598301431a821ae172ea0b6f&${queryString}`, {
+            method: 'POST',
+            body: JSON.stringify(
+                {
+                    'media_type': 'movie',
+                    'media_id': Number(movieID),
+                    'watchlist': bool
                 }
             ),
             headers: {
