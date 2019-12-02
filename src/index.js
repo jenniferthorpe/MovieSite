@@ -17,6 +17,7 @@ async function appStart() {
 
     const sessionID = sessionStorage.getItem('sessionIDStorage')
     const loginTest = await TMDBApi.getFavorites({ sessionID })
+    console.log(loginTest.status_code)
 
     const initialState = {}
 

@@ -104,9 +104,11 @@ class Login extends Component {
 
                     history.push('/');
                 }
+                else {
+                    // eslint-disable-next-line no-console
+                    console.log(responseSession);
+                }
 
-                // eslint-disable-next-line no-console
-                console.log(responseSession);
             }
             else {
                 this.errorCodeRef.current.style.display = 'block';

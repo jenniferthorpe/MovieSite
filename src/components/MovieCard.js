@@ -11,6 +11,7 @@ import '../style/firstPage.css';
 import { withRouter } from 'react-router'
 import { connect } from 'react-redux'
 import { TMDBApi } from './TMDBApi';
+import { MyDb } from './MyDb'
 import { setFavoritesAction, setWatchLaterAction } from '../actions/actions';
 
 
@@ -86,24 +87,28 @@ class MovieCard extends React.Component {
       return;
     }
 
-    if (favorites[movieID] === undefined) {
-      const newFav = {
-        ...favorites,
-        [movieID]: {
-          id, original_language, overview, release_date, poster_path, title, vote_average, vote_count
+    if (favorites !== undefined) {
+
+      if (favorites[movieID] === undefined) {
+        const newFav = {
+          ...favorites,
+          [movieID]: {
+            id, original_language, overview, release_date, poster_path, title, vote_average, vote_count
+          }
         }
+        const array = Object.values(newFav)
+        setFavorites(array)
+        TMDBApi.addFavorite({ sessionID, movieID, bool: true })
+        MyDb.addFavorite({ poster_path, title, release_date, original_language, vote_count, vote_average, overview, movieID })
       }
-      const array = Object.values(newFav)
-      setFavorites(array)
-      TMDBApi.addFavorite({ sessionID, movieID, bool: true })
-    }
 
-    else if (favorites[movieID].id === movieID) {
-      delete favorites[movieID]
-      const array = Object.values(favorites)
+      else if (favorites[movieID].id === movieID) {
+        delete favorites[movieID]
+        const array = Object.values(favorites)
 
-      setFavorites(array)
-      TMDBApi.addFavorite({ sessionID, movieID, bool: false })
+        setFavorites(array)
+        TMDBApi.addFavorite({ sessionID, movieID, bool: false })
+      }
     }
 
     else {
