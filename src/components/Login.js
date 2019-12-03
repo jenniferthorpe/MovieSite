@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 import { sessionIDAction, userInfoAction, setFavoritesAction, setWatchLaterAction } from '../actions/actions'
 import { TMDBApi } from './TMDBApi';
+import { MyDb } from './MyDb';
 
 
 const form = {
@@ -96,6 +97,12 @@ class Login extends Component {
                     const { session_id: sessionID } = await responseSession.json();
 
                     const { results: favorites } = await TMDBApi.getFavorites({ sessionID })
+
+                    // const favoritesArr = favorites.map(({ poster_path, title, release_date, original_language, vote_count, vote_average, overview, id: movieID }) => {
+                    //     return MyDb.addFavorite({ poster_path, title, release_date, original_language, vote_count, vote_average, overview, movieID, sessionID })
+                    // })
+                    // Promise.all(favoritesArr)
+
                     const { results: watchLater } = await TMDBApi.getWatchLater({ sessionID })
                     setSessionID(sessionID);
                     setUsername({ username });
@@ -153,7 +160,7 @@ const mapStateToProps = (state) => {
     return {
         username: state.userInfo.username,
         sessionID: state.userInfo.sessionID,
-        favoritesID: state.userInfo.favoritesID,
+        favorites: state.userInfo.favorites.entities.favorites,
         watchLater: state.userInfo.watchLater,
         movieDetails: state.userInfo.movieDetailsByID
     }

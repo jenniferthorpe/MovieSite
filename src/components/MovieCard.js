@@ -99,7 +99,7 @@ class MovieCard extends React.Component {
         const array = Object.values(newFav)
         setFavorites(array)
         TMDBApi.addFavorite({ sessionID, movieID, bool: true })
-        MyDb.addFavorite({ poster_path, title, release_date, original_language, vote_count, vote_average, overview, movieID })
+        MyDb.addFavorite({ poster_path, title, release_date, original_language, vote_count, vote_average, overview, movieID, sessionID })
       }
 
       else if (favorites[movieID].id === movieID) {
@@ -108,6 +108,7 @@ class MovieCard extends React.Component {
 
         setFavorites(array)
         TMDBApi.addFavorite({ sessionID, movieID, bool: false })
+        MyDb.removeFavorite({ movieID, sessionID })
       }
     }
 

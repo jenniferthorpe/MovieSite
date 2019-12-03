@@ -2,7 +2,6 @@ import React from 'react'
 
 export class TMDBApi extends React.Component {
 
-
   static getTrending({ timeWindow, page }) {
     return TMDBApi.fetchData({ url: 'trending/movie/', parameters: timeWindow, url2: '', queryString: `page=${page}` });
   }
