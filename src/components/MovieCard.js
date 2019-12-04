@@ -108,6 +108,7 @@ class MovieCard extends React.Component {
 
         setFavorites(array)
         TMDBApi.addFavorite({ sessionID, movieID, bool: false })
+        MyDb.removeFavorite({ movieID, sessionID })
       }
     }
 

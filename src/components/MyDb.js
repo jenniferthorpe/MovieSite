@@ -14,9 +14,9 @@ export class MyDb extends React.Component {
   //   return MyDb.postFavoritesBulk(favoritesArr)
   // }
 
-  // static removeFavorite({ movieID, sessionID }) {
-  //   return MyDb.deleteFavorite({ movieID, sessionID })
-  // }
+  static removeFavorite({ movieID, sessionID }) {
+    return MyDb.deleteFavorite({ movieID, sessionID })
+  }
 
 
 
@@ -60,20 +60,20 @@ export class MyDb extends React.Component {
   //   })
   // }
 
-  // static async deleteFavorite({ movieID, sessionID }) {
-  //   return fetch('http://localhost:4500/v1/delete/favorite', {
-  //     method: 'DELETE',
-  //     body: JSON.stringify(
-  //       {
-  //         movieID,
-  //         sessionID
-  //       },
-  //     ),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   }
-  //   )
-  // }
+  static async deleteFavorite({ movieID, sessionID }) {
+    return fetch('http://localhost:4500/v1/delete/favorite', {
+      method: 'DELETE',
+      body: JSON.stringify(
+        {
+          movieID,
+          sessionID
+        },
+      ),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    )
+  }
 
 }
