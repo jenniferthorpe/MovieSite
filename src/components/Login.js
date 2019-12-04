@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 import { sessionIDAction, userInfoAction, setFavoritesAction, setWatchLaterAction } from '../actions/actions'
 import { TMDBApi } from './TMDBApi';
+import { MyDb } from './MyDb';
 
 const form = {
     height: '20vh',
@@ -84,6 +85,7 @@ class Login extends Component {
         if (username && password) {
 
             const { request_token: token } = await TMDBApi.logInToken();
+            console.log(token);
 
             const response = await TMDBApi.logInResponse({ username, password, token });
 
@@ -93,15 +95,37 @@ class Login extends Component {
 
                 if (responseSession.status === 200) {
                     const { session_id: sessionID } = await responseSession.json();
-
                     const { results: favorites } = await TMDBApi.getFavorites({ sessionID })
-
-                    // const favoritesArr = favorites.map(({ poster_path, title, release_date, original_language, vote_count, vote_average, overview, id: movieID }) => {
-                    //     return MyDb.addFavorite({ poster_path, title, release_date, original_language, vote_count, vote_average, overview, movieID, sessionID })
-                    // })
-                    // Promise.all(favoritesArr)
-
                     const { results: watchLater } = await TMDBApi.getWatchLater({ sessionID })
+
+                    const newObjArr = favorites.map(({
+                        poster_path,
+                        title,
+                        release_date,
+                        original_language,
+                        vote_count,
+                        vote_average,
+                        overview,
+                        id: movieID,
+                    }) => {
+                        return {
+                            poster_path,
+                            title,
+                            release_date,
+                            original_language,
+                            vote_count,
+                            vote_average,
+                            overview,
+                            movieID,
+                            sessionID
+                        }
+                    })
+
+                    const bulkResponse = MyDb.addFavoritesBulk(newObjArr)
+
+                    console.log(favorites);
+                    console.log(newObjArr);
+
                     setSessionID(sessionID);
                     setUsername({ username });
                     setFavorites(favorites);

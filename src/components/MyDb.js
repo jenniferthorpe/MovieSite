@@ -10,14 +10,13 @@ export class MyDb extends React.Component {
     return MyDb.postFavorite({ poster_path, title, release_date, original_language, vote_count, vote_average, overview, movieID, sessionID })
   }
 
-  // static addFavoritesBulk(favoritesArr) {
-  //   return MyDb.postFavoritesBulk(favoritesArr)
-  // }
-
   static removeFavorite({ movieID, sessionID }) {
     return MyDb.deleteFavorite({ movieID, sessionID })
   }
 
+  static addFavoritesBulk(newObjArr) {
+    return MyDb.postFavoritesBulk(newObjArr)
+  }
 
 
 
@@ -48,18 +47,6 @@ export class MyDb extends React.Component {
     })
   }
 
-  // static async postFavoritesBulk(favoritesArr) {
-  //   return fetch('http://localhost:4500/v1/new/favorite/list', {
-  //     method: 'POST',
-  //     body: JSON.stringify(
-  //       favoritesArr
-  //     ),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  // }
-
   static async deleteFavorite({ movieID, sessionID }) {
     return fetch('http://localhost:4500/v1/delete/favorite', {
       method: 'DELETE',
@@ -74,6 +61,18 @@ export class MyDb extends React.Component {
       }
     }
     )
+  }
+
+  static async postFavoritesBulk(newObjArr) {
+    return fetch('http://localhost:4500/v1/add/favorites', {
+      method: 'POST',
+      body: JSON.stringify(
+        newObjArr
+      ),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
   }
 
 }
