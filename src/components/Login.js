@@ -5,8 +5,6 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 import { sessionIDAction, userInfoAction, setFavoritesAction, setWatchLaterAction } from '../actions/actions'
 import { TMDBApi } from './TMDBApi';
-import { MyDb } from './MyDb';
-
 
 const form = {
     height: '20vh',
